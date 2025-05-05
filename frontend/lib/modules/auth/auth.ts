@@ -2,7 +2,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswor
 import { auth } from "../../firebase/firebase-config";
 import { formatFromHTMLFormToJSObject } from "./formatHTMLToJSObject";
 
-export async function handleAuth (completedHTMLForm: unknown, setMessage: unknown, completedInfosFromAuthForm: Record <string, string>, modalState: string ) {
+export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormElement>, setMessage: React.Dispatch<React.SetStateAction<string>>, completedInfosFromAuthForm: Record <string, string>, modalState: string ) {
   
   //Remplissage du currentUser
   formatFromHTMLFormToJSObject (completedHTMLForm, completedInfosFromAuthForm);
@@ -86,11 +86,12 @@ export async function handleAuth (completedHTMLForm: unknown, setMessage: unknow
     }
 
   }
-  catch (err : any) {
-    if (err.code === "auth/invalid-email") { setMessage("Format de l'adresse email invalide") } 
-    if (err.code === "auth/email-already-in-use") { setMessage("Cette adresse email est déjà utilisée") } 
-    if (err.code === "auth/weak-password") { setMessage("Le mot de passe saisi doit contenir au moins 6 caractères") } 
-    if (err.code === "auth/invalid-credential") {setMessage("Adresse email ou mot de passe incorrects")}
+  catch (err) {
+    const error = err as {code?: string}
+    if (error.code === "auth/invalid-email") { setMessage("Format de l'adresse email invalide") } 
+    if (error.code === "auth/email-already-in-use") { setMessage("Cette adresse email est déjà utilisée") } 
+    if (error.code === "auth/weak-password") { setMessage("Le mot de passe saisi doit contenir au moins 6 caractères") } 
+    if (error.code === "auth/invalid-credential") {setMessage("Adresse email ou mot de passe incorrects")}
     else { 
       console.error(err)
     }

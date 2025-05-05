@@ -1,12 +1,15 @@
-export function formatFromHTMLFormToJSObject (HTMLForm: unknown, JSObject: Record <string, string>) {
+export function formatFromHTMLFormToJSObject (HTMLForm: React.RefObject<HTMLFormElement>, JSObject: Record <string, string>) {
+
+  if (!HTMLForm.current) return;
 
   // Remplissage de JSObject
   for (let i=0; i<HTMLForm.current.length; i++) {
-    if (HTMLForm.current[i].checked) {
+    const element = HTMLForm.current[i] as HTMLInputElement
+    if (element.checked) {
       JSObject.categorie = HTMLForm.current[i].id
     }
-    if (HTMLForm.current[i].id !== "recruteur" && HTMLForm.current[i].id !== "candidat") {
-      JSObject [HTMLForm.current[i].id] = HTMLForm.current[i].value
+    if (element.id !== "recruteur" && element.id !== "candidat") {
+      JSObject [element.id] = element.value
     }
   }
   

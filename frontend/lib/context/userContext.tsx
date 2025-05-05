@@ -6,7 +6,7 @@ import { auth } from "../firebase/firebase-config";
 import checkCurrentUser from "../modules/user/checkCurrentUser";
 
 type UserContextType = {
-    modalState: string | null,
+    modalState: string,
     toggleModals: (modal: string)=> void,
     firebaseUser: User | null,
     completedInfosFromAuthForm: Record <string, string>,

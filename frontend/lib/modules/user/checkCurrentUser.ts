@@ -1,4 +1,6 @@
-export default async function checkCurrentUser (firebaseUser) {
+import {User} from "firebase/auth"
+
+export default async function checkCurrentUser (firebaseUser: User) {
     if (!firebaseUser) return false
     try {
         // Récupère et rafraichis le token Firebase actuel :

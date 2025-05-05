@@ -11,18 +11,16 @@ export default function AuthModale() {
   const router = useRouter ()
   
   // Etats via useContext
-  const { modalState, toggleModals, completedInfosFromAuthForm, currentUser, updateCurrentUser, firebaseUser} = useAuth ()
+  const { modalState, toggleModals, completedInfosFromAuthForm, updateCurrentUser, firebaseUser} = useAuth ()
 
-  /*  HTMLinputsElements servira à transmettre les infos saisies dans les composants enfants HTMLInputElementsFromAuthForm au composant parent AuthModale via la props "ref". 
-  completedHTMLInputsElements servira à : 1. passer les infos lors de la validation du formulaire via la fonction handleForm. 2. reset le formulaire lors de la validation via la propriété ref du form (reset dans la fonction handleAuth)*/
-  const HTMLinputsElements = useRef<HTMLInputElement[]>([])
-  const completedHTMLInputsElements = useRef<HTMLInputElement[]>([])
+  /* completedHTMLInputsElements servira à : 1. passer les infos lors de la validation du formulaire via la fonction handleForm. 2. reset le formulaire lors de la validation via la propriété ref du form (reset dans la fonction handleAuth)*/
+  const completedHTMLInputsElements = useRef<HTMLFormElement>(null as unknown as HTMLFormElement)
 
   // Message d'erreur en bas du formulaire :
   const [formValidationMessage, setFormValidationMessage] = useState("")
 
   // Gestion de la validation du formulaire :
-  const handleForm = async (e: any) => {
+  const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     //// Authentification :
     const authSuccess = await handleAuth (completedHTMLInputsElements, setFormValidationMessage, completedInfosFromAuthForm, modalState)
@@ -33,7 +31,7 @@ export default function AuthModale() {
       // Routage vers la bonne home page : 
       router.push(`/${authSuccess.data.categorie || ""}`)
       // Vidage du formulaire suite à la validation de celui-ci :
-      completedHTMLInputsElements.current.reset()
+      completedHTMLInputsElements.current?.reset()
     }
   }
 
@@ -65,15 +63,11 @@ export default function AuthModale() {
                 infos={modalState !== "updatePwd" ? recruteurCandidatRadioButtonsInfos : []}
                 style="recruteurCandidatRadioButtonsContainer"
                 subStyle="radioButtonLine"
-                //Transmission de HTMLinputsElements depuis la modale vers le composant enfant
-                ref={HTMLinputsElements}
               />
               <HTMLInputElementsFromAuthForm
                 infos={modalState === "signin" ? signInInputsInfos : modalState === "signup" ? signUpInputsInfos : updatePwdInfos}
                 style="inputsContainer"
                 subStyle="inputLine"
-                //Transmission de HTMLinputsElements depuis la modale vers le composant enfant
-                ref={HTMLinputsElements}
               />
               {modalState === "signin" &&
               <button className = "fakeButton" onClick={() => toggleModals("updatePwd")} >Mot de passe oublié ?</button>

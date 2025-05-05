@@ -10,7 +10,7 @@ export async function logOut (currentUser: Record <string, string>) {
         console.log("Utilisateur déconnecté : ", cred)
         return (cred)
     }
-    catch (err: any) {
+    catch (err) {
         console.error("Problème lors de la déconnexion", err)
         return false
     }

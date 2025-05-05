@@ -1,7 +1,12 @@
 import Image from "next/image";
 import styles from "./logo.module.css"
 
-export default function Logo({photoSize, fontSize}) {
+interface LogoProps {
+  photoSize: number;
+  fontSize: string;
+}
+
+export default function Logo({photoSize, fontSize} : LogoProps) {
   return (
     <div className= {styles.logoContainer}>
       <Image
