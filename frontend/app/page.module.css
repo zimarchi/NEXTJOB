@@ -1,0 +1,33 @@
+.main {
+  display: flex;
+  justify-content: space-around;
+  min-height: 500px;
+
+}
+
+main .link { /* Correspond aux balises Next Link */
+  height: 500px; /* Doit correspondre à la hauteur de l'image centrale entre les deux Link */ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  color: white;
+}
+
+.responsive {
+  @media (prefers-color-scheme: dark) {
+    filter: invert();
+  }
+  @media (max-width: 700px) {
+    display: none;
+  }
+}
+
+.recruteur {
+  background-color: var(--recruteur-color);
+}
+
+.candidat {
+  background-color: var(--candidat-color);
+}

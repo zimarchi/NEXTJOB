@@ -1,0 +1,7 @@
+.categorie {
+    text-transform: capitalize;
+    font-weight: 800;
+    border-radius: 7;
+    width: fit-content;
+    padding : 3 10 3 10;
+}

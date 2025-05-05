@@ -1,0 +1,187 @@
+/* Varibales pour le light mode */
+:root {
+  --recruteur-color: #B02418;
+  --recruteur-background-color: rgb(255, 240, 240);
+  --candidat-color: rgb(0, 80, 210);
+  --candidat-background-color: aliceblue;
+  --grey-color: rgb(196, 196, 196);
+  --box-shadow-light: 0px 0px 5px 1px rgb(205, 205, 205);
+  --box-shadow-dark: 0px 0px 5px 1px rgb(125, 125, 125);
+
+}
+
+/* Variables pour le dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #2e2626;
+    --foreground: #ededed;
+  }
+  a {
+    color: red;
+  }
+}
+
+html {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0 0 0 0;
+}
+
+button {
+  background-color: rgb(207, 207, 207);
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+}
+
+input {
+  height: 15px;
+  width: fit-content;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.fakeButton {
+  font-size: 13px;
+  background-color: white;
+  border: none;
+  color: rgb(0, 80, 210);
+  cursor: pointer;
+  padding: 0;
+}
+
+.fakeButton:hover {
+  text-decoration: underline;
+}
+
+.submitButton {
+  background-color: var(--candidat-color);
+  color: white;
+  font-weight: 800;
+  border: none;
+  padding: 10 10 10 10; 
+}
+
+.resetButton {
+  background-color: var(--grey-color);
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 10 10 10 10; 
+}
+
+.buttonsLine {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.modalPage {
+  height: 100%; 
+  width: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+
+.modal {
+  height: fit-content; 
+  width: fit-content;
+  background-color: rgb(255, 255, 255);
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  padding: 10 20 10 20;
+  box-shadow: var(--box-shadow-dark);
+}
+
+.modal h2 {
+  text-align: center;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  padding: 12 0 0 0;
+  gap: 20px;
+  max-width: 320px; /* Pour empecher que le texte d'erreur qui s'affiche lors de la validation du formulaire ne modifie la largeur de la modale */
+}
+
+.recruteurCandidatRadioButtonsContainer {
+  gap: 40px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.profilePhoto {
+  border-radius: 50%;
+  border: #adadad solid .1px;
+}
+
+.inputsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.radioButtonsLine,
+.inputLine {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.radioButtonLine {
+  font-size: 17px;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.inputLine {
+  font-size: 14.5px;
+  gap: 50px;
+}
+
+.connecterCreerCompte {
+  padding: 20 0 0 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+}
+
+/* Exemple de règle pour extrait de code
+code {
+  background-color: rgb(196, 192, 192);
+  border-radius: 2px;
+  font-weight: bold;
+  width: fit-content;
+}
+*/
+
+/* Forcer une règle sur l'intégralité du document avec le selecteur universel *
+* {
+  background-color: aqua;
+}
+*/
+
+/* Exemple de règle pour écrans avec pointeurs et survol
+@media (hover) {
+  a:hover {
+    background: var(--button-hover);
+  }
+}
+*/

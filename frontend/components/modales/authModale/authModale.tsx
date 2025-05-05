@@ -1,0 +1,119 @@
+import HTMLInputElementsFromAuthForm from "../../formsInputs/authFormInputs";
+import { useRef, useState } from "react";
+import { useAuth } from "@/lib/context/userContext";
+import { signInInputsInfos, signUpInputsInfos, recruteurCandidatRadioButtonsInfos, updatePwdInfos } from "@/lib/formsInputsInfos/formsInfos";
+import { handleAuth } from "@/lib/modules/auth/auth";
+import { useRouter } from "next/navigation";
+import MonCompteModale from "../monCompteModale/monCompteModale";
+
+export default function AuthModale() {
+
+  const router = useRouter ()
+  
+  // Etats via useContext
+  const { modalState, toggleModals, completedInfosFromAuthForm, currentUser, updateCurrentUser, firebaseUser} = useAuth ()
+
+  /*  HTMLinputsElements servira à transmettre les infos saisies dans les composants enfants HTMLInputElementsFromAuthForm au composant parent AuthModale via la props "ref". 
+  completedHTMLInputsElements servira à : 1. passer les infos lors de la validation du formulaire via la fonction handleForm. 2. reset le formulaire lors de la validation via la propriété ref du form (reset dans la fonction handleAuth)*/
+  const HTMLinputsElements = useRef<HTMLInputElement[]>([])
+  const completedHTMLInputsElements = useRef<HTMLInputElement[]>([])
+
+  // Message d'erreur en bas du formulaire :
+  const [formValidationMessage, setFormValidationMessage] = useState("")
+
+  // Gestion de la validation du formulaire :
+  const handleForm = async (e: any) => {
+    e.preventDefault()
+    //// Authentification :
+    const authSuccess = await handleAuth (completedHTMLInputsElements, setFormValidationMessage, completedInfosFromAuthForm, modalState)
+    if (authSuccess) {
+      toggleModals("close")
+      //MAJ de currentUser :
+      updateCurrentUser (authSuccess.data)
+      // Routage vers la bonne home page : 
+      router.push(`/${authSuccess.data.categorie || ""}`)
+      // Vidage du formulaire suite à la validation de celui-ci :
+      completedHTMLInputsElements.current.reset()
+    }
+  }
+
+  return (
+    <>
+      <div className="modalPage" onClick={() => {
+        toggleModals("close")
+        if (!firebaseUser) {
+          updateCurrentUser({})
+        }
+      }}
+      >
+        { !["monCompte", "close", "updateFullName"].includes(modalState) &&
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            {modalState === "signin" && <h2>Vous avez déjà un compte ?</h2>}
+            {modalState === "signup" && <h2>Créez votre compte !</h2>}
+            {modalState === "updatePwd" && 
+            <>
+              <h2>Mettez à jour votre mot de passe</h2>
+              <p>Un e-mail vous sera envoyé pour réinitialiser votre mot de passe.</p>
+            </>
+            }
+            <form
+              className="authForm"
+              onSubmit={handleForm}
+              //Transmission de completedHTMLInputsElements depuis le form 
+              ref={completedHTMLInputsElements}>
+              <HTMLInputElementsFromAuthForm
+                infos={modalState !== "updatePwd" ? recruteurCandidatRadioButtonsInfos : []}
+                style="recruteurCandidatRadioButtonsContainer"
+                subStyle="radioButtonLine"
+                //Transmission de HTMLinputsElements depuis la modale vers le composant enfant
+                ref={HTMLinputsElements}
+              />
+              <HTMLInputElementsFromAuthForm
+                infos={modalState === "signin" ? signInInputsInfos : modalState === "signup" ? signUpInputsInfos : updatePwdInfos}
+                style="inputsContainer"
+                subStyle="inputLine"
+                //Transmission de HTMLinputsElements depuis la modale vers le composant enfant
+                ref={HTMLinputsElements}
+              />
+              {modalState === "signin" &&
+              <button className = "fakeButton" onClick={() => toggleModals("updatePwd")} >Mot de passe oublié ?</button>
+              }
+              <div className="buttonsLine">
+                <button type="reset" className="resetButton" onClick={() => toggleModals("close")}>
+                  Annuler
+                </button>
+                <button type="submit" className="submitButton">
+                  {modalState === "signin" ? "Se connecter" : modalState === "signup" ? "S'inscrire" : "Envoyer e-mail"}
+                </button>
+              </div>
+              <span style={{ color: "red", fontSize: 14, width: "100%", display: "block", height: "15px" }}>
+                {formValidationMessage}
+              </span>
+            </form>
+            {["signin", "signup"].includes(modalState) &&
+            <div className="connecterCreerCompte">
+              <p>{modalState === "signin" ? "Vous n'avez pas de compte ?" : "Vous avez déjà un compte ?" }</p>
+              <button  
+                className = "fakeButton" 
+                onClick={() => { 
+                  if (modalState === "signin") {
+                    toggleModals("signup")
+                  } 
+                  if (modalState === "signup") {
+                    toggleModals("signin")
+                  } 
+                  setFormValidationMessage ("")
+                }}>
+                <p>{modalState === "signin" ? "Créez-le !" : "Connectez-vous !" }</p>
+              </button>
+            </div>
+            }
+          </div>
+        }
+        {modalState === "monCompte" &&
+        <MonCompteModale />
+        }
+      </div>
+    </>
+  );
+}

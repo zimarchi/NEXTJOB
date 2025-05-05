@@ -1,0 +1,45 @@
+.inputLine {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    height: 50px;
+    border-top: #e4e4e4 1px solid;
+}
+
+.labelValue {
+    width: fit-content;
+    display: flex;
+}
+
+.label {
+    width: 200px;
+    color: #6c6c6c;
+    font-weight: 400;
+}
+
+.value {
+    width: 350px;
+    font-weight: 550; 
+}
+
+@media (max-width: 400px) {
+    .inputLine {
+        gap: 0px;
+    }
+
+    .labelValue {
+        display: flex;
+        flex-direction: column;
+        width: 230px;
+        gap: 3px;
+    }
+    .label {
+        width: fit-content;
+        font-size: 14px;
+    }
+    .value {
+        width: fit-content;
+        font-size: 14px;
+    }
+
+}
