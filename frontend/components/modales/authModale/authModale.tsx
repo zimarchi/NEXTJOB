@@ -1,7 +1,7 @@
-import HTMLInputElementsFromAuthForm from "../../formsInputs/authFormInputs";
+import HTMLInputsElements from "../../formsInputs/formInputs";
 import { useRef, useState } from "react";
 import { useAuth } from "@/lib/context/userContext";
-import { signInInputsInfos, signUpInputsInfos, recruteurCandidatRadioButtonsInfos, updatePwdInfos } from "@/lib/formsInputsInfos/formsInfos";
+import { signInInputsInfos, signUpInputsInfos, recruteurCandidatRadioButtonsInfos, passwordInfos } from "@/lib/formsInputsInfos/formsInfos";
 import { handleAuth } from "@/lib/modules/auth/auth";
 import { useRouter } from "next/navigation";
 import MonCompteModale from "../monCompteModale/monCompteModale";
@@ -11,7 +11,7 @@ export default function AuthModale() {
   const router = useRouter ()
   
   // Etats via useContext
-  const { modalState, toggleModals, completedInfosFromAuthForm, updateCurrentUser, firebaseUser} = useAuth ()
+  const { modalState, toggleModals, completedInfosFromForm, updateCurrentUser, firebaseUser} = useAuth ()
 
   /* completedHTMLInputsElements servira à : 1. passer les infos lors de la validation du formulaire via la fonction handleForm. 2. reset le formulaire lors de la validation via la propriété ref du form (reset dans la fonction handleAuth)*/
   const completedHTMLInputsElements = useRef<HTMLFormElement>(null as unknown as HTMLFormElement)
@@ -20,10 +20,10 @@ export default function AuthModale() {
   const [formValidationMessage, setFormValidationMessage] = useState("")
 
   // Gestion de la validation du formulaire :
-  const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAuthForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     //// Authentification :
-    const authSuccess = await handleAuth (completedHTMLInputsElements, setFormValidationMessage, completedInfosFromAuthForm, modalState)
+    const authSuccess = await handleAuth (completedHTMLInputsElements, setFormValidationMessage, completedInfosFromForm, modalState)
     if (authSuccess) {
       toggleModals("close")
       //MAJ de currentUser :
@@ -48,7 +48,7 @@ export default function AuthModale() {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             {modalState === "signin" && <h2>Vous avez déjà un compte ?</h2>}
             {modalState === "signup" && <h2>Créez votre compte !</h2>}
-            {modalState === "updatePwd" && 
+            {modalState === "password" && 
             <>
               <h2>Mettez à jour votre mot de passe</h2>
               <p>Un e-mail vous sera envoyé pour réinitialiser votre mot de passe.</p>
@@ -56,21 +56,21 @@ export default function AuthModale() {
             }
             <form
               className="authForm"
-              onSubmit={handleForm}
+              onSubmit={handleAuthForm}
               //Transmission de completedHTMLInputsElements depuis le form 
               ref={completedHTMLInputsElements}>
-              <HTMLInputElementsFromAuthForm
-                infos={modalState !== "updatePwd" ? recruteurCandidatRadioButtonsInfos : []}
+              <HTMLInputsElements
+                infos={modalState !== "password" ? recruteurCandidatRadioButtonsInfos : []}
                 style="recruteurCandidatRadioButtonsContainer"
                 subStyle="radioButtonLine"
               />
-              <HTMLInputElementsFromAuthForm
-                infos={modalState === "signin" ? signInInputsInfos : modalState === "signup" ? signUpInputsInfos : updatePwdInfos}
+              <HTMLInputsElements
+                infos={modalState === "signin" ? signInInputsInfos : modalState === "signup" ? signUpInputsInfos : passwordInfos}
                 style="inputsContainer"
                 subStyle="inputLine"
               />
               {modalState === "signin" &&
-              <button className = "fakeButton" onClick={() => toggleModals("updatePwd")} >Mot de passe oublié ?</button>
+              <button className = "fakeButton" onClick={() => toggleModals("password")} >Mot de passe oublié ?</button>
               }
               <div className="buttonsLine">
                 <button type="reset" className="resetButton" onClick={() => toggleModals("close")}>

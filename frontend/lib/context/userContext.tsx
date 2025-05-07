@@ -9,7 +9,7 @@ type UserContextType = {
     modalState: string,
     toggleModals: (modal: string)=> void,
     firebaseUser: User | null,
-    completedInfosFromAuthForm: Record <string, string>,
+    completedInfosFromForm: Record <string, string>,
     currentUser: Record <string, string>,
     loading : boolean,
     updateCurrentUser: (currentUser: Record <string, string>)=> void,
@@ -22,11 +22,11 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
     const [modalState, setModalState] = useState ("close")
 
     const toggleModals = (modal:string) => {
-        if (modal === "signin")             { setModalState("signin") }
-        if (modal === "signup")             { setModalState("signup") }
         if (modal === "close")              { setModalState("close") }
+        if (modal === "signup")             { setModalState("signup") }
+        if (modal === "signin")             { setModalState("signin") }
+        if (modal === "password")          { setModalState("password") }
         if (modal === "monCompte")          { setModalState("monCompte") }
-        if (modal === "updatePwd")          { setModalState("updatePwd") }
         if (modal === "updateFullName")     { setModalState("updateFullName") }
         if (modal === "updateProfilePhoto") { setModalState("updateProfilePhoto") }
         if (modal === "updateBirthDate")    { setModalState("updateBirthDate") }
@@ -36,7 +36,7 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
 
     const [firebaseUser, setFirebaseUser] = useState <User | null> (null)
 
-    const [completedInfosFromAuthForm] = useState ({})
+    const [completedInfosFromForm] = useState ({})
 
     const [currentUser, setCurrentUser] = useState ({})
 
@@ -62,7 +62,7 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
     }, [loading])
 
     return (
-        <UserContext.Provider value = {{ modalState, toggleModals, loading, firebaseUser, completedInfosFromAuthForm, currentUser, updateCurrentUser }} >
+        <UserContext.Provider value = {{ modalState, toggleModals, loading, firebaseUser, completedInfosFromForm, currentUser, updateCurrentUser }} >
             {children}
         </UserContext.Provider>
     )

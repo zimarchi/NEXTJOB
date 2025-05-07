@@ -1,3 +1,11 @@
+.inputsContainer {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    border-bottom: #e4e4e4 1px solid;
+    height: fit-content;
+}
+
 .inputLine {
     display: flex;
     align-items: center;

@@ -8,7 +8,7 @@ import Image from "next/image";
 import { formatDate } from "@/lib/modules/dateFormatting/formatDate";
 import ProfileUpdateModale from "@/components/modales/updateModale/profileUpdateModale";
 import CategorieLabel from "@/components/categorieLabel/categorieLabel";
-import HTMLInputElementFromUpdateForm from "@/components/formsInputs/updateFormInputs";
+import MonCompteForm from "@/components/formsInputs/monCompteForm/monCompteForm";
 
 export default function MonCompte() {
 
@@ -37,9 +37,8 @@ export default function MonCompte() {
   
   return (
     <>
-      {modalState === "updateFullName" &&
+      {modalState?.includes("update") && 
       < ProfileUpdateModale />}
-
       <div className={styles.main}>
         <div className={styles.blanck}>
           <div className={styles.title}>
@@ -54,18 +53,27 @@ export default function MonCompte() {
                 width={160}
                 height={160}
                 className="profilePhoto"
-                />
-                <button className = "fakeButton" onClick={()=> console.log("modif photo")} >Changez votre photo</button>
+                priority
+              />
+              <button className = "fakeButton" onClick={()=> console.log("modif photo")} >Changez votre photo</button>
             </div>
-            <div className={styles.inputsContainer}>
-              <HTMLInputElementFromUpdateForm label = "Nom complet" value = {currentUser?.firstname + " " + currentUser?.lastname}/>
-              <HTMLInputElementFromUpdateForm label = "Date de naissance" value = {formattedDate}/>
-            </div>
+            <MonCompteForm
+              infos = {[
+                {
+                  label: "Nom complet",
+                  value: currentUser?.firstname + " " + currentUser?.lastname,
+                  modal: "updateFullName",
+                },
+                {
+                  label: "Date de naissance",
+                  value: formattedDate,
+                  modal: "updateBirthDate",
+                },
+              ]}
+            />            
           </div>
         </div>
       </div>
     </>
-
-
   )
 }

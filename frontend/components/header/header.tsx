@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <>
-      {modalState!=="close" &&
+      {modalState!=="close" && !modalState.includes("update") &&
       <AuthModale />
       }
       <nav className={styles.main}>

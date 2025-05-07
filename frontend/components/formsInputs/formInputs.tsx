@@ -7,7 +7,7 @@ type InputsProps = {
 }
 
 /* Utilisation de forwardRef pour recevoir inputsRef depuis le composant parent Modale */ 
-const HTMLInputElementsFromAuthForm = forwardRef <HTMLInputElement[] | null, InputsProps> ( 
+const HTMLInputsElements = forwardRef <HTMLInputElement[] | null, InputsProps> ( 
   ({infos, style, subStyle}, ref) => { 
     
     const castedRef = ref as React.RefObject<HTMLInputElement[]>
@@ -40,6 +40,6 @@ const HTMLInputElementsFromAuthForm = forwardRef <HTMLInputElement[] | null, Inp
   )}
 )
       
-HTMLInputElementsFromAuthForm.displayName = "HTMLInputElementsFromAuthForm"
+HTMLInputsElements.displayName = "HTMLInputsElements"
 
-export default HTMLInputElementsFromAuthForm
+export default HTMLInputsElements
