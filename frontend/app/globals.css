@@ -7,7 +7,7 @@
   --grey-color: rgb(196, 196, 196);
   --box-shadow-light: 0px 0px 5px 1px rgb(205, 205, 205);
   --box-shadow-dark: 0px 0px 5px 1px rgb(125, 125, 125);
-
+  --modalPage-background-color: rgba(123, 123, 123, 0.5);
 }
 
 /* Variables pour le dark mode */
@@ -88,11 +88,16 @@ a:hover {
 }
 
 .modalPage {
-  height: 100%; 
-  width: 100%;
-  position: absolute;
+  height: 100vh; 
+  width: 100vw;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: center;
+  align-items: start;
+  background-color: var(--modalPage-background-color);
 }
 
 .modal {

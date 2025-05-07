@@ -6,7 +6,7 @@ import HTMLInputsElements from "@/components/formsInputs/formInputs";
 export default function ProfileUpdateModale() {
   
   // Etats via useContext
-  const {modalState, toggleModals, completedInfosFromForm, updateCurrentUser, firebaseUser} = useAuth ()
+  const {modalState, toggleModals, completedInfosFromForm, updateCurrentUser, firebaseUser, currentUser} = useAuth ()
  
   /* completedHTMLInputsElements servira à : 1. passer les infos lors de la validation du formulaire via la fonction handleSignUp. 2. reset le formulaire lors de la validation via la propriété ref du form (resst dans la fonction handleSingUp)*/
   const completedHTMLInputsElements = useRef<HTMLFormElement>(null as unknown as HTMLFormElement)
@@ -44,7 +44,8 @@ export default function ProfileUpdateModale() {
           className="authForm"
           onSubmit={handleProfileUpdateForm}
           //Transmission de completedHTMLInputsElements depuis le form 
-          ref={completedHTMLInputsElements}>
+          ref={completedHTMLInputsElements}
+        >
           <HTMLInputsElements
                 infos={modalState === "updateFullName" ? updateUserFullName : modalState === "updateBirthDate" ? updateUserBirthDate : [] }
                 style="inputsContainer"
