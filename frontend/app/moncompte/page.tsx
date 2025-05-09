@@ -3,18 +3,16 @@
 import styles from "./page.module.css"
 import { useAuth } from "@/lib/context/userContext";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
-import { formatDate } from "@/lib/modules/dateFormatting/formatDate";
-import ProfileUpdateModale from "@/components/modales/updateModale/profileUpdateModale";
+import UserUpdateModale from "@/components/modales/updateModal/userUpdateModal";
 import CategorieLabel from "@/components/categorieLabel/categorieLabel";
 import MonCompteForm from "@/components/formsInputs/monCompteForm/monCompteForm";
 
 export default function MonCompte() {
 
   // Etats via useContext
-  const {currentUser, firebaseUser, modalState, loading} = useAuth ()
-  const [formattedDate, setFormattedDate] = useState ("")
+  const {currentUser, firebaseUser, modalState, loading, formattedBirthDateLong} = useAuth ()
 
   const router = useRouter();
 
@@ -23,12 +21,7 @@ export default function MonCompte() {
     if (!firebaseUser && !loading) {
       router.push("/")
     }
-    if (currentUser && !loading) {
-      // Formatage date de naissance :
-      const date = formatDate(currentUser.birth_date)
-      setFormattedDate(date)
-    }
-  }, [firebaseUser, loading, router, currentUser]);
+  }, [firebaseUser, loading, router]);
   
   // Pour éviter le mismatch entre rendu coté serveur et coté client :
   if (!firebaseUser || !currentUser) {
@@ -38,12 +31,12 @@ export default function MonCompte() {
   return (
     <>
       {modalState?.includes("update") && 
-      < ProfileUpdateModale />}
+      < UserUpdateModale />}
       <div className={styles.main}>
         <div className={styles.blanck}>
           <div className={styles.title}>
             <h1>Mon compte </h1>
-            <CategorieLabel label = {currentUser?.categorie} fontSize = "22px" />
+            <CategorieLabel label = {currentUser?.categorie || "null"} fontSize = "22px" />
           </div>
           <div className={styles.form}>
             <div className={styles.photoContainer}>
@@ -61,12 +54,12 @@ export default function MonCompte() {
               infos = {[
                 {
                   label: "Nom complet",
-                  value: currentUser?.firstname + " " + currentUser?.lastname,
+                  value: currentUser?.firstname + " " + currentUser?.lastname || "null",
                   modal: "updateFullName",
                 },
                 {
                   label: "Date de naissance",
-                  value: formattedDate,
+                  value: formattedBirthDateLong || "null",
                   modal: "updateBirthDate",
                 },
               ]}

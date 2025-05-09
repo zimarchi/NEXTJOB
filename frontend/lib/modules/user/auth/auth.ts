@@ -1,10 +1,10 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail} from "firebase/auth";
-import { auth } from "../../firebase/firebase-config";
-import { formatFromHTMLFormToJSObject } from "./formatHTMLToJSObject";
+import { auth } from "../../../firebase/firebase-config";
+import { formatFromHTMLFormToJSObject } from "../../formatHTMLFormToJSObject";
 
 export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormElement>, setMessage: React.Dispatch<React.SetStateAction<string>>, completedInfosFromAuthForm: Record <string, string>, modalState: string ) {
   
-  //Remplissage du currentUser
+  //Conversion du formulaire HTML en objet JSON
   formatFromHTMLFormToJSObject (completedHTMLForm, completedInfosFromAuthForm);
 
   try {
@@ -22,7 +22,7 @@ export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormEle
       const cred = await createUserWithEmailAndPassword (auth, completedInfosFromAuthForm.email, completedInfosFromAuthForm.pwd)
       const firebaseIdToken = await cred.user.getIdToken ()
       // Envoi au backend via la route users/signup
-      const response = await fetch("http://localhost:3000/users/signup",
+      const response = await fetch("http://localhost:3000/auth/signup",
         { 
           method: "POST",
           headers: {
@@ -56,7 +56,7 @@ export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormEle
       if (cred) {
         const firebaseIdToken = await cred.user.getIdToken ()
         // Envoi au backend via la route users/signin
-        const response = await fetch("http://localhost:3000/users/signin",
+        const response = await fetch("http://localhost:3000/auth/signin",
           { 
             method: "POST",
             headers: {

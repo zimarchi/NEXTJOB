@@ -1,9 +1,9 @@
 import { useAuth } from "@/lib/context/userContext";
 import Image from "next/image";
 import Logo from "../../logo/logo";
-import styles from "./monCompteModale.module.css";
+import styles from "./monCompteModal.module.css";
 import Link from "next/link";
-import { logOut } from "@/lib/modules/auth/logOut";
+import { logOut } from "@/lib/modules/user/auth/logOut";
 import { useRouter } from "next/navigation";
 import CategorieLabel from "@/components/categorieLabel/categorieLabel";
 
@@ -12,24 +12,29 @@ export default function MonCompteModale() {
     const router = useRouter ()
 
     // Etats via useContext
-    const { toggleModals, modalState, currentUser, updateCurrentUser } = useAuth ()
+    const { toggleModals, modalState, currentUser, updateCurrentUser, firebaseUser } = useAuth ()
 
     // LogOut :
     const handleLogOut = async () => {
         //// Déconnexion à Firebase :
-        const loggedOut = await logOut (currentUser)
-        if (loggedOut) {
-            toggleModals("close")
-            //MAJ de currentUser :
-            updateCurrentUser (loggedOut)
+        if (firebaseUser) {
+            const loggedOut = await logOut ()
+            if (loggedOut) {
+                toggleModals("close")
+                //MAJ de currentUser :
+                updateCurrentUser (loggedOut)
+            }
         }
     }
 
     return (
         <>
             { modalState === "monCompte" && 
-            <div className={styles.monComptePage}>
-                <div className={styles.monCompteModale}>
+            <div 
+                className="modalPage monCompteModalPage"
+                onClick={() => toggleModals("close")}            
+            >
+                <div className="modal monCompteModal">
                     <div className={styles.deconnect}>
                         <Logo photoSize={30} fontSize={"15px"}/>
                         <button 

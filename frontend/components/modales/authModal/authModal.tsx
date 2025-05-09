@@ -2,11 +2,10 @@ import HTMLInputsElements from "../../formsInputs/formInputs";
 import { useRef, useState } from "react";
 import { useAuth } from "@/lib/context/userContext";
 import { signInInputsInfos, signUpInputsInfos, recruteurCandidatRadioButtonsInfos, passwordInfos } from "@/lib/formsInputsInfos/formsInfos";
-import { handleAuth } from "@/lib/modules/auth/auth";
+import { handleAuth } from "@/lib/modules/user/auth/auth";
 import { useRouter } from "next/navigation";
-import MonCompteModale from "../monCompteModale/monCompteModale";
 
-export default function AuthModale() {
+export default function AuthModal() {
 
   const router = useRouter ()
   
@@ -37,14 +36,16 @@ export default function AuthModale() {
 
   return (
     <>
-      <div className="modalPage" onClick={() => {
-        toggleModals("close")
-        if (!firebaseUser) {
-          updateCurrentUser({})
-        }
-      }}
-      >
-        { !["monCompte", "close", "updateFullName"].includes(modalState) &&
+      {!["monCompte", "close", "updateFullName"].includes(modalState) &&
+        <div 
+          className="modalPage modalPageColor" 
+          onClick={() => {
+            toggleModals("close")
+            if (!firebaseUser) {
+              updateCurrentUser({})
+            }
+          }}
+        >
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             {modalState === "signin" && <h2>Vous avez déjà un compte ?</h2>}
             {modalState === "signup" && <h2>Créez votre compte !</h2>}
@@ -55,7 +56,7 @@ export default function AuthModale() {
             </>
             }
             <form
-              className="authForm"
+              className="userForm"
               onSubmit={handleAuthForm}
               //Transmission de completedHTMLInputsElements depuis le form 
               ref={completedHTMLInputsElements}>
@@ -63,11 +64,13 @@ export default function AuthModale() {
                 infos={modalState !== "password" ? recruteurCandidatRadioButtonsInfos : []}
                 style="recruteurCandidatRadioButtonsContainer"
                 subStyle="radioButtonLine"
+                placeholders= {[]}
               />
               <HTMLInputsElements
                 infos={modalState === "signin" ? signInInputsInfos : modalState === "signup" ? signUpInputsInfos : passwordInfos}
                 style="inputsContainer"
                 subStyle="inputLine"
+                placeholders= {[]}
               />
               {modalState === "signin" &&
               <button className = "fakeButton" onClick={() => toggleModals("password")} >Mot de passe oublié ?</button>
@@ -80,9 +83,11 @@ export default function AuthModale() {
                   {modalState === "signin" ? "Se connecter" : modalState === "signup" ? "S'inscrire" : "Envoyer e-mail"}
                 </button>
               </div>
+              { formValidationMessage.length>0 &&
               <span style={{ color: "red", fontSize: 14, width: "100%", display: "block", height: "15px" }}>
                 {formValidationMessage}
               </span>
+              }
             </form>
             {["signin", "signup"].includes(modalState) &&
             <div className="connecterCreerCompte">
@@ -103,11 +108,8 @@ export default function AuthModale() {
             </div>
             }
           </div>
-        }
-        {modalState === "monCompte" &&
-        <MonCompteModale />
-        }
-      </div>
+        </div>
+      }
     </>
   );
 }

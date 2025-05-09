@@ -1,10 +1,7 @@
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/firebase-config";
+import { auth } from "../../../firebase/firebase-config";
 
-export async function logOut (currentUser: Record <string, string>) {
-
-    console.log("avant déconnexion", currentUser)
-
+export async function logOut () {
     try {
         const cred = await signOut (auth)
         console.log("Utilisateur déconnecté : ", cred)

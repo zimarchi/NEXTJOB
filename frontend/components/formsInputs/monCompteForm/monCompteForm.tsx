@@ -17,7 +17,7 @@ export default function MonCompteForm({infos}: monCompteFormProps) {
               <span className={styles.label}>{info.label}</span>
               <span className={styles.value}>{info.value}</span>
           </div>
-          <button className = "fakeButton" onClick={()=> toggleModals (info.modal)}>Modifier</button>
+          <button className = "fakeButton" onClick={()=> toggleModals (info.modal as "updateFullName" | "updateBirthDate")}>Modifier</button>
       </div>
       ))}
     </div>

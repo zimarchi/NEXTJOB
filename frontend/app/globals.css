@@ -85,6 +85,7 @@ a:hover {
   display: flex;
   justify-content: center;
   gap: 20px;
+  padding: 20 0 0 0;
 }
 
 .modalPage {
@@ -96,8 +97,16 @@ a:hover {
   left: 0;
   display: flex;
   justify-content: center;
-  align-items: start;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.modalPageColor {
   background-color: var(--modalPage-background-color);
+}
+
+.monCompteModalPage {
+  justify-content: right;
 }
 
 .modal {
@@ -111,16 +120,24 @@ a:hover {
   box-shadow: var(--box-shadow-dark);
 }
 
+.monCompteModal {
+  gap: 15px;
+  box-shadow: 0px 4px 6px -2px rgba(0, 0, 0, 0.2),  /* ombre en bas */
+              4px 0px 6px -2px rgba(0, 0, 0, 0.2),  /* droite */
+             -4px 0px 6px -2px rgba(0, 0, 0, 0.2);  /* gauche */
+  margin-top: 50px;
+}
+
 .modal h2 {
   text-align: center;
 }
 
-.authForm {
+.userForm {
   display: flex;
   flex-direction: column;
-  padding: 12 0 0 0;
+  padding: 12 0 20 0;
   gap: 20px;
-  max-width: 320px; /* Pour empecher que le texte d'erreur qui s'affiche lors de la validation du formulaire ne modifie la largeur de la modale */
+  width: 320px; /* Pour empecher que le texte d'erreur qui s'affiche lors de la validation du formulaire ne modifie la largeur de la modale */
 }
 
 .recruteurCandidatRadioButtonsContainer {
@@ -139,6 +156,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 0 0 0 0;
 }
 
 .radioButtonsLine,

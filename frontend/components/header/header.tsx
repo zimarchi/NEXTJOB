@@ -4,7 +4,8 @@ import styles from "./header.module.css";
 import Image from "next/image";
 import Logo from "../logo/logo";
 import { useAuth } from "@/lib/context/userContext";
-import AuthModale from "@/components/modales/authModale/authModale";
+import AuthModal from "@/components/modales/authModal/authModal";
+import MonCompteModal from "../modales/monCompteModal/monCompteModal";
 import Link from "next/link";
 
 export default function Header() {
@@ -14,9 +15,8 @@ export default function Header() {
 
   return (
     <>
-      {modalState!=="close" && !modalState.includes("update") &&
-      <AuthModale />
-      }
+      { modalState === "monCompte" && <MonCompteModal /> }
+      { ["signup", "signin", "password"].includes (modalState) && <AuthModal /> }
       <nav className={styles.main}>
         <Link 
           onClick={()=> toggleModals("close")}

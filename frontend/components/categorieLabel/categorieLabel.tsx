@@ -2,7 +2,7 @@ import { useAuth } from "@/lib/context/userContext"
 import styles from "./categorieLabel.module.css"
 
 interface CategorieLabelProps {
-    label: string;
+    label: string | undefined;
     fontSize: string;
   }
 
