@@ -1,27 +1,21 @@
-.main {
+.link {
+  height: 500px;
   display: flex;
-  justify-content: space-around;
-  min-height: 500px;
-
-}
-
-main .link { /* Correspond aux balises Next Link */
-  height: 500px; /* Doit correspondre à la hauteur de l'image centrale entre les deux Link */ 
-  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
   width: 100%;
   color: white;
 }
 
-.responsive {
-  @media (prefers-color-scheme: dark) {
-    filter: invert();
-  }
-  @media (max-width: 700px) {
-    display: none;
-  }
+.role {
+  font-size: 35px;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.link span + span {
+  margin-top: 5px;
 }
 
 .recruteur {
@@ -30,4 +24,25 @@ main .link { /* Correspond aux balises Next Link */
 
 .candidat {
   background-color: var(--candidat-color);
+}
+
+@media (max-width: 700px) {
+  .logo {
+    display: none;
+  }
+  .role {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 700px) and (orientation: portrait) {
+  .link {
+    height: 400px;
+  }
+}
+
+@media (max-width: 700px) and (orientation: landscape) {
+  .link {
+    height: 270px;
+  }
 }

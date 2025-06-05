@@ -7,7 +7,7 @@ const { getAuthenticatedUser } = require("../../lib/auth")
 /* Check current user */
 router.post("/", async (req, res) => {
   const sql = await dbConnect()
-  console.log("bdd connectéé")
+  console.log("bdd connectée")
   const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
   if (!firebaseToken) {
     return res.status(401).json({ error: "No token provided." });
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
     await sql`UPDATE users SET last_login = NOW() WHERE firebase_uid = ${firebaseUId}`;
     // Renvoi du user mis à jour
     const updatedUser = await sql`SELECT * FROM users WHERE firebase_uid = ${firebaseUId}`
-    return res.status(200).json({ message: "Token valid", user: updatedUser[0] });
+    return res.status(200).json({ message: "Valid Token", user: updatedUser[0] });
   } catch (error) {
     console.error("Erreur lors de la vérification du token:", error);
     res.status(401).json({ error: "Invalid or expired token." });

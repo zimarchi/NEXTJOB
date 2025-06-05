@@ -1,15 +1,18 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail} from "firebase/auth";
-import { auth } from "../../../firebase/firebase-config";
-import { formatFromHTMLFormToJSObject } from "../../formatHTMLFormToJSObject";
+import { auth } from "../../lib/firebase/firebase-config";
+import { formatFromHTMLFormToJSObject } from "../../utils/formatHTMLFormToJSObject";
+import { MODAL_STATES } from "@/constants/modalStates";
 
-export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormElement>, setMessage: React.Dispatch<React.SetStateAction<string>>, completedInfosFromAuthForm: Record <string, string>, modalState: string ) {
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
+
+export async function authenticate (completedHTMLForm: React.RefObject<HTMLFormElement>, setMessage: React.Dispatch<React.SetStateAction<string>>, completedInfosFromAuthForm: Record <string, string>, modalState: string ) {
   
   //Conversion du formulaire HTML en objet JSON
   formatFromHTMLFormToJSObject (completedHTMLForm, completedInfosFromAuthForm);
 
   try {
     // SignUp :
-    if (modalState === "signup") {
+    if (modalState === MODAL_STATES.SIGN_UP) {
       // Vérification de saisie identique des deux mots de passe
       if (completedInfosFromAuthForm.pwd !== completedInfosFromAuthForm.rptpwd) { 
         setMessage ("Les deux mots de passe saisis sont différents") 
@@ -22,7 +25,7 @@ export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormEle
       const cred = await createUserWithEmailAndPassword (auth, completedInfosFromAuthForm.email, completedInfosFromAuthForm.pwd)
       const firebaseIdToken = await cred.user.getIdToken ()
       // Envoi au backend via la route users/signup
-      const response = await fetch("http://localhost:3000/auth/signup",
+      const response = await fetch(`${backendURL}/auth/signup`,
         { 
           method: "POST",
           headers: {
@@ -33,7 +36,7 @@ export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormEle
             firstname: completedInfosFromAuthForm.firstname,
             lastname: completedInfosFromAuthForm.lastname,
             email: completedInfosFromAuthForm.email,
-            categorie: completedInfosFromAuthForm.categorie,
+            role: completedInfosFromAuthForm.role,
           })
         }
       ); 
@@ -44,19 +47,18 @@ export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormEle
         console.error("Erreur lors de la création du nouvel utilisateur :", data.error)
         return false
       }
-      console.log("User créé dans Supabase", data)
 
       return ({response : true, data: data})
     }
 
     // SignIn :
-    if (modalState === "signin") {
+    if (modalState === MODAL_STATES.SIGN_IN) {
       // Authentification avec Firebase
       const cred = await signInWithEmailAndPassword (auth, completedInfosFromAuthForm.email, completedInfosFromAuthForm.pwd)
       if (cred) {
         const firebaseIdToken = await cred.user.getIdToken ()
         // Envoi au backend via la route users/signin
-        const response = await fetch("http://localhost:3000/auth/signin",
+        const response = await fetch(`${backendURL}/auth/signin`,
           { 
             method: "POST",
             headers: {
@@ -64,7 +66,7 @@ export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormEle
               "Content-Type": "application/json",
             },
             body : JSON.stringify ({
-              categorie : completedInfosFromAuthForm.categorie
+              role : completedInfosFromAuthForm.role
             })
           }
         ); 
@@ -80,7 +82,7 @@ export async function handleAuth (completedHTMLForm: React.RefObject<HTMLFormEle
     }
 
     // Update password :
-    if (modalState === "updatePwd") {
+    if (modalState === MODAL_STATES.PASSWORD) {
       await sendPasswordResetEmail (auth, completedInfosFromAuthForm.email)
       return ({response : true, data: {}})
     }

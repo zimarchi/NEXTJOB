@@ -1,11 +1,9 @@
-import styles from "../page.module.css"
+import { USER_ROLE_CANDIDAT } from "@/constants/usersRoles"
+
 
 export default function Candidat() {
 
   return (
-    <div className={styles.main}>
-      <h1>Espace Candidat</h1>
-      
-    </div>
+      <h1 style={{textTransform: "capitalize"}}>Espace {USER_ROLE_CANDIDAT}</h1>
   )
 }

@@ -2,23 +2,13 @@
 
 import { createContext, useState, useEffect, useContext } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "../firebase/firebase-config";
-import checkCurrentUser from "../modules/user/checkCurrentUser";
-import { formatDateLong, formatDateShort } from "@/lib/modules/formatDate";
-
-type ModalType =
-        |"close"
-        | "signup"
-        | "signin"
-        | "password"
-        | "monCompte"
-        | "updateFullName"
-        | "updateProfilePhoto"
-        | "updateBirthDate";
+import { auth } from "../lib/firebase/firebase-config";
+import checkUser from "../helpers/checkUser";
+import { formatDateLong, formatDateShort } from "@/utils/formatDate";
 
 type UserContextType = {
     modalState: string,
-    toggleModals: (modal: ModalType)=> void,
+    toggleModals: (modal: string)=> void,
     firebaseUser: User | null,
     completedInfosFromForm: Record <string, string>,
     currentUser: Record <string, string | undefined>,
@@ -38,7 +28,7 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
     
     const [modalState, setModalState] = useState ("close")
 
-    const toggleModals = (modal:ModalType) => setModalState(modal)
+    const toggleModals = (modal:string) => setModalState(modal)
 
     const [loading, setLoading] = useState (true)
 
@@ -59,7 +49,7 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
         const unsubscribe = onAuthStateChanged (auth, async (firebaseUser) => {
             setFirebaseUser (firebaseUser)
             if (firebaseUser) {
-                const user = await checkCurrentUser(firebaseUser);
+                const user = await checkUser(firebaseUser);
                 if (user) updateCurrentUser (user)
             } 
             if (!firebaseUser) updateCurrentUser({})

@@ -1,11 +1,12 @@
-import { useAuth } from "@/lib/context/userContext";
+import { useAuth } from "@/context/userContext";
 import Image from "next/image";
 import Logo from "../../logo/logo";
 import styles from "./monCompteModal.module.css";
 import Link from "next/link";
-import { logOut } from "@/lib/modules/user/auth/logOut";
+import { logOut } from "@/helpers/auth/logOut";
 import { useRouter } from "next/navigation";
-import CategorieLabel from "@/components/categorieLabel/categorieLabel";
+import UserRoleLabel from "@/components/usersRolesLabels/userRoleLabel";
+import { MODAL_STATES } from "@/constants/modalStates";
 
 export default function MonCompteModale() {
 
@@ -20,7 +21,7 @@ export default function MonCompteModale() {
         if (firebaseUser) {
             const loggedOut = await logOut ()
             if (loggedOut) {
-                toggleModals("close")
+                toggleModals(MODAL_STATES.CLOSE)
                 //MAJ de currentUser :
                 updateCurrentUser (loggedOut)
             }
@@ -29,29 +30,33 @@ export default function MonCompteModale() {
 
     return (
         <>
-            { modalState === "monCompte" && 
-            <div 
+            { modalState === MODAL_STATES.MON_COMPTE && 
+            <section 
                 className="modalPage monCompteModalPage"
-                onClick={() => toggleModals("close")}            
+                onClick={() => toggleModals(MODAL_STATES.CLOSE)} 
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="Modale Mon compte"          
             >
-                <div className="modal monCompteModal">
-                    <div className={styles.deconnect}>
-                        <Logo photoSize={30} fontSize={"15px"}/>
+                <div className="modal monCompteModal" role="document">
+                    <header className={styles.deconnect}>
+                        <Logo logoWidth={80} />
                         <button 
                             onClick = {() => {
                                 handleLogOut ()
                                 window.location.href = "/"
                             }}
                             className="fakeButton"
+                            style = {{paddingBottom: "5px"}}
                         >
                             Se déconnecter
                         </button>
-                    </div>
-                    <CategorieLabel label = {currentUser.categorie} fontSize = "16px" />
-                    <div className={styles.userInfosContainer}>
+                    </header>
+                    <UserRoleLabel label = {currentUser.role} fontSize = "16px" />
+                    <section className={styles.userInfosContainer}>
                         <Image
                             src={currentUser.photo_url || "/defaultAvatar.svg"}
-                            alt="Photo profil"
+                            alt={firebaseUser ? "Photo de profil" : "Icône utilisateur par défaut"}
                             width={80}
                             height={80}
                             className="profilePhoto"
@@ -64,12 +69,12 @@ export default function MonCompteModale() {
                                 href = {`/moncompte`}
                                 style = {{textAlign : "left"}}    
                             >
-                                <button className="fakeButton" onClick={()=> toggleModals("close")} >Mon compte</button>
+                                <button className="fakeButton" onClick={()=> toggleModals(MODAL_STATES.CLOSE)} >Mon compte</button>
                             </Link>
                         </div>
-                    </div>
+                    </section>
                 </div>
-            </div>
+            </section>
             }
         </>
   )

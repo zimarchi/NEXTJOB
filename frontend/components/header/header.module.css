@@ -1,30 +1,29 @@
-.main {
+.nav {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0 0 0;
-  height: 50px;
-  background-color: var(--recruteur-background-color)
+  background-color: var(--header-color);
 }
 
-.monCompte {
+.logo {
+  display: flex;
+  align-items: center;
+}
+.logo:hover {
+  background-color: var(--header-color-hover);
+}
+
+.monCompteButton {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 7px;
   font-size: 13px;
-  height: 100%;
+  height: 50px;
   padding: 0 10 0 10;
+  border: none;
+  background-color: transparent;
 }
-.monCompte:hover {
-  background-color: #b0251835;
-}
-
-.logo {
-  padding: 0 10 0 10;
-}
-
-.logo:hover {
-  background-color: #b0251835;
+.monCompteButton:hover {
+  background-color: var(--header-color-hover);
 }

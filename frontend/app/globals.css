@@ -1,13 +1,16 @@
-/* Varibales pour le light mode */
+/* Variables pour le light mode */
 :root {
-  --recruteur-color: #B02418;
-  --recruteur-background-color: rgb(255, 240, 240);
-  --candidat-color: rgb(0, 80, 210);
-  --candidat-background-color: aliceblue;
-  --grey-color: rgb(196, 196, 196);
-  --box-shadow-light: 0px 0px 5px 1px rgb(205, 205, 205);
-  --box-shadow-dark: 0px 0px 5px 1px rgb(125, 125, 125);
-  --modalPage-background-color: rgba(123, 123, 123, 0.5);
+  --header-color: #f4f9f4;
+  --header-color-hover: #dfeddf;
+  --footer-color: #f4f9f4;
+  --recruteur-color: #93c796;
+  --candidat-color: #417e31;
+  --grey-color: #c4c4c4;
+  --box-shadow-light: 0px 0px 5px 1px #cdcdcd;
+  --box-shadow-dark: 0px 0px 5px 1px #7d7d7d;
+  --modalPage-background-color: #7b7b7b80;
+  --fakeButton-color: #0050d1;
+  --submitButton-color: #87b600;
 }
 
 /* Variables pour le dark mode */
@@ -21,6 +24,10 @@
   }
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html {
   max-width: 100vw;
   overflow-x: hidden;
@@ -29,20 +36,34 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+header {
+  height: 50px; 
+}
+
 body {
   margin: 0 0 0 0;
 }
 
+main {
+  display: flex ;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  gap: 100px;
+}
+
 button {
-  background-color: rgb(207, 207, 207);
   width: fit-content;
   height: fit-content;
   cursor: pointer;
 }
 
 input {
-  height: 15px;
-  width: fit-content;
+  height: 25px;
+}
+
+label {
+  min-width: 130px;
 }
 
 a {
@@ -57,7 +78,7 @@ a:hover {
   font-size: 13px;
   background-color: white;
   border: none;
-  color: rgb(0, 80, 210);
+  color: var(--fakeButton-color);
   cursor: pointer;
   padding: 0;
 }
@@ -67,7 +88,7 @@ a:hover {
 }
 
 .submitButton {
-  background-color: var(--candidat-color);
+  background-color: var(--submitButton-color);
   color: white;
   font-weight: 800;
   border: none;
@@ -112,20 +133,21 @@ a:hover {
 .modal {
   height: fit-content; 
   width: fit-content;
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   margin-top: 80px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 10 20 10 20;
   box-shadow: var(--box-shadow-dark);
 }
 
 .monCompteModal {
   gap: 15px;
-  box-shadow: 0px 4px 6px -2px rgba(0, 0, 0, 0.2),  /* ombre en bas */
-              4px 0px 6px -2px rgba(0, 0, 0, 0.2),  /* droite */
-             -4px 0px 6px -2px rgba(0, 0, 0, 0.2);  /* gauche */
+  box-shadow: var(--box-shadow-light);
   margin-top: 50px;
+  align-items: flex-start;
+  padding: 0 20 15 20;
 }
 
 .modal h2 {
@@ -137,14 +159,17 @@ a:hover {
   flex-direction: column;
   padding: 12 0 20 0;
   gap: 20px;
-  width: 320px; /* Pour empecher que le texte d'erreur qui s'affiche lors de la validation du formulaire ne modifie la largeur de la modale */
+  width: 330px; /* Pour empecher que le texte d'erreur qui s'affiche lors de la validation du formulaire ne modifie la largeur de la modale */
 }
 
-.recruteurCandidatRadioButtonsContainer {
-  gap: 40px;
+.usersRolesRadioButtonsContainer {
+  gap: 70px;
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
+  border: none;
+  color: white;
+  font-size: 1px;
 }
 
 .profilePhoto {
@@ -156,24 +181,29 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 0 0 0 0;
+  border: none;
+  color: white;
+  font-size: 0px;
 }
 
-.radioButtonsLine,
-.inputLine {
+.radioButtonLabel {
+  min-width: 80px;
+}
+
+.radioButtonField,
+.inputField {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: black
 }
 
-.radioButtonLine {
+.radioButtonField {
   font-size: 17px;
-  align-items: center;
-  display: flex;
-  gap: 10px;
+  text-transform: capitalize;
 }
 
-.inputLine {
+.inputField {
   font-size: 14.5px;
   gap: 50px;
 }
@@ -185,6 +215,13 @@ a:hover {
   align-items: center;
   font-size: 13px;
 }
+
+@media (max-width: 700px) {
+  main {
+    gap: 0px;
+  }
+}
+
 
 /* Exemple de règle pour extrait de code
 code {

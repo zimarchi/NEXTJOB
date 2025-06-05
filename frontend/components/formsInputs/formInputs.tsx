@@ -1,23 +1,26 @@
 import { forwardRef } from "react"
 
 type InputsProps = {
+  legend : string,
   infos: Record<string,string>[],
-  style: string,
-  subStyle: string,
+  containerStyle: string,
+  fieldStyle: string,
   placeholders: string [],
+  labelStyle?: string,
 }
 
 /* Utilisation de forwardRef pour recevoir inputsRef depuis le composant parent Modale */ 
 const HTMLInputsElements = forwardRef <HTMLInputElement[] | null, InputsProps> ( 
-  ({infos, style, subStyle, placeholders}, ref) => { 
+  ({legend, infos, containerStyle, fieldStyle, placeholders, labelStyle}, ref) => { 
     
     const castedRef = ref as React.RefObject<HTMLInputElement[]>
     
     return (
-    <div className={style}>
+    <fieldset className={containerStyle}>
+      <legend>{legend}</legend>
       {infos.map ((info: Record<string, string>, i: number) => (
-        <div key = {info.id} className ={subStyle}>
-          <label htmlFor={info.id}>
+        <div key = {info.id} className ={fieldStyle}>
+          <label htmlFor={info.id} className={labelStyle}>
             {info.label}
           </label>
           <input 
@@ -37,7 +40,7 @@ const HTMLInputsElements = forwardRef <HTMLInputElement[] | null, InputsProps> (
           />
         </div>
       ))}
-    </div>
+    </fieldset>
   )}
 )
       

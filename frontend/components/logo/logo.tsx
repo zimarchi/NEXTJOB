@@ -1,22 +1,22 @@
 import Image from "next/image";
-import styles from "./logo.module.css"
 
 interface LogoProps {
-  photoSize: number;
-  fontSize: string;
+  logoWidth: number;
+  className?: string;
 }
 
-export default function Logo({photoSize, fontSize} : LogoProps) {
+export default function Logo({logoWidth, className = ""} : LogoProps) {
   return (
-    <div className= {styles.logoContainer}>
-      <Image
-          src="/logo.png"
-          alt="Image du job de tes rêves"
-          width={photoSize}
-          height={photoSize}
-          priority
-      />
-      <span style={{ fontSize: fontSize, fontWeight: 800 }}>NextJob</span>
-    </div>
+    
+    <Image
+      src="/logo.svg"
+      alt=""
+      height={logoWidth/2}
+      width={logoWidth}
+      priority
+      role = "img"
+      aria-label="Logo de Hire Too"
+      className={className}
+    />
   )
 }

@@ -1,10 +1,8 @@
-import styles from "../page.module.css"
+import { USER_ROLE_RECRUTEUR } from "@/constants/usersRoles";
 
 export default function Recruteur() {
 
   return (
-    <div className={styles.main}>
-      <h1>Espace Recruteur</h1>
-    </div>
+    <h1 style={{textTransform: "capitalize"}}>Espace {USER_ROLE_RECRUTEUR}</h1>
   );
 }

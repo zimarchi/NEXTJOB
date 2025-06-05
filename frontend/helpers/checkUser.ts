@@ -1,12 +1,14 @@
-import {User} from "firebase/auth"
+import { User } from "firebase/auth"
 
-export default async function checkCurrentUser (firebaseUser: User) {
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
+
+export default async function checkUser (firebaseUser: User) {
     if (!firebaseUser) return false
     try {
         // Récupère et rafraichis le token Firebase actuel :
         const firebaseToken = await firebaseUser.getIdToken(true);
         // Envoi au backend du token pour vérification par Firebase puis par Supabase :
-        const response = await fetch ("http://localhost:3000/checkUser", {
+        const response = await fetch (`${backendURL}/checkUser`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",

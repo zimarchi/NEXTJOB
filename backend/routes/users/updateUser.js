@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
   }
   try {
     // Utilisation de la fonction getAuthenticatedUser pour récupérer l'utilisateur
-    const { firebaseUId, supabaseUser } = await getAuthenticatedUser(sql, firebaseToken, categorie = null);
+    const { firebaseUId, supabaseUser } = await getAuthenticatedUser(sql, firebaseToken, role = null);
     if (supabaseUser.length === 0) {
       return res.status(404).json({ error: "Aucun utilisateur Supabase correspondant." });
     }
