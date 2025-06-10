@@ -23,6 +23,7 @@
   padding: 0 10 0 10;
   border: none;
   background-color: transparent;
+  color: var(--text-color);
 }
 .monCompteButton:hover {
   background-color: var(--header-color-hover);

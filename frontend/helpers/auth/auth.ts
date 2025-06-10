@@ -1,20 +1,25 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail} from "firebase/auth";
 import { auth } from "../../lib/firebase/firebase-config";
-import { formatFromHTMLFormToJSObject } from "../../utils/formatHTMLFormToJSObject";
 import { MODAL_STATES } from "@/constants/modalStates";
+import { convertFormToObject } from "@/utils/convertForm";
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
 
-export async function authenticate (completedHTMLForm: React.RefObject<HTMLFormElement>, setMessage: React.Dispatch<React.SetStateAction<string>>, completedInfosFromAuthForm: Record <string, string>, modalState: string ) {
+export async function authenticate (
+  form: HTMLFormElement,
+  setMessage: React.Dispatch<React.SetStateAction<string>>,
+  modalState: string 
+) {
   
   //Conversion du formulaire HTML en objet JSON
-  formatFromHTMLFormToJSObject (completedHTMLForm, completedInfosFromAuthForm);
-
+  const formObject = convertFormToObject (form)
+  if (!formObject) return false
+  
   try {
     // SignUp :
     if (modalState === MODAL_STATES.SIGN_UP) {
       // Vérification de saisie identique des deux mots de passe
-      if (completedInfosFromAuthForm.pwd !== completedInfosFromAuthForm.rptpwd) { 
+      if (formObject.pwd !== formObject.rptpwd) { 
         setMessage ("Les deux mots de passe saisis sont différents") 
         return false
       }
@@ -22,21 +27,21 @@ export async function authenticate (completedHTMLForm: React.RefObject<HTMLFormE
         setMessage ("");
       }
       // Création du user dans Firebase
-      const cred = await createUserWithEmailAndPassword (auth, completedInfosFromAuthForm.email, completedInfosFromAuthForm.pwd)
-      const firebaseIdToken = await cred.user.getIdToken ()
-      // Envoi au backend via la route users/signup
+      const cred = await createUserWithEmailAndPassword (auth, formObject.email, formObject.pwd)
+      const firebaseToken = await cred.user.getIdToken ()
+      // Envoi au backend via la route users/auth/signup
       const response = await fetch(`${backendURL}/auth/signup`,
         { 
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${firebaseIdToken}`, // Envoi du token firebase
+            "Authorization": `Bearer ${firebaseToken}`, // Envoi du token firebase
             "Content-Type": "application/json",
           },
           body : JSON.stringify ({
-            firstname: completedInfosFromAuthForm.firstname,
-            lastname: completedInfosFromAuthForm.lastname,
-            email: completedInfosFromAuthForm.email,
-            role: completedInfosFromAuthForm.role,
+            firstname: formObject.firstname,
+            lastname: formObject.lastname,
+            email: formObject.email,
+            role: formObject.role,
           })
         }
       ); 
@@ -54,19 +59,19 @@ export async function authenticate (completedHTMLForm: React.RefObject<HTMLFormE
     // SignIn :
     if (modalState === MODAL_STATES.SIGN_IN) {
       // Authentification avec Firebase
-      const cred = await signInWithEmailAndPassword (auth, completedInfosFromAuthForm.email, completedInfosFromAuthForm.pwd)
+      const cred = await signInWithEmailAndPassword (auth, formObject.email, formObject.pwd)
       if (cred) {
-        const firebaseIdToken = await cred.user.getIdToken ()
-        // Envoi au backend via la route users/signin
+        const firebaseToken = await cred.user.getIdToken ()
+        // Envoi au backend via la route users/auth/signin
         const response = await fetch(`${backendURL}/auth/signin`,
           { 
             method: "POST",
             headers: {
-              "Authorization": `Bearer ${firebaseIdToken}`,
+              "Authorization": `Bearer ${firebaseToken}`,
               "Content-Type": "application/json",
             },
             body : JSON.stringify ({
-              role : completedInfosFromAuthForm.role
+              role : formObject.role
             })
           }
         ); 
@@ -83,7 +88,7 @@ export async function authenticate (completedHTMLForm: React.RefObject<HTMLFormE
 
     // Update password :
     if (modalState === MODAL_STATES.PASSWORD) {
-      await sendPasswordResetEmail (auth, completedInfosFromAuthForm.email)
+      await sendPasswordResetEmail (auth, formObject.email)
       return ({response : true, data: {}})
     }
 

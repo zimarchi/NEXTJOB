@@ -1,24 +1,23 @@
-import HTMLInputsElements from "@/components/formsInputs/formInputs";
-import { useRef, useState } from "react";
+import Fieldset from "@/components/forms/formFieldset";
+import { useState } from "react";
 import { useAuth } from "@/context/userContext";
 import { SIGN_IN_INPUTS, SIGN_UP_INPUTS, USERS_ROLES_RADIO_BUTTONS, UPDATE_PASSWORD_INPUTS } from "@/constants/formsInfos";
 import { MODAL_STATES } from "@/constants/modalStates";
 import { authenticate } from "@/helpers/auth/auth";
 import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebase-config";
 
 export default function AuthModal() {
 
   const router = useRouter ()
   
   // Etats via useContext
-  const { modalState, toggleModals, completedInfosFromForm, updateCurrentUser, firebaseUser} = useAuth ()
+  const { modalState, toggleModals, updateCurrentUser, firebaseUser} = useAuth ()
 
   // Modales à masquer
   const updateModals = Object.values(MODAL_STATES.UPDATE);
   const modalsToHide = [MODAL_STATES.MON_COMPTE, MODAL_STATES.CLOSE, ...updateModals]
-
-  /* completedHTMLInputsElements servira à : 1. passer les infos lors de la validation du formulaire via la fonction handleForm. 2. reset le formulaire lors de la validation via la propriété ref du form (reset dans la fonction handleAuth)*/
-  const completedHTMLInputsElements = useRef<HTMLFormElement>(null as unknown as HTMLFormElement)
 
   // Message d'erreur en bas du formulaire :
   const [formValidationMessage, setFormValidationMessage] = useState("")
@@ -27,15 +26,15 @@ export default function AuthModal() {
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     //// Authentification :
-    const authSuccess = await authenticate (completedHTMLInputsElements, setFormValidationMessage, completedInfosFromForm, modalState)
+    const authSuccess = await authenticate (e.currentTarget, setFormValidationMessage, modalState)
     if (authSuccess) {
       toggleModals(MODAL_STATES.CLOSE)
       //MAJ de currentUser :
       updateCurrentUser (authSuccess.data)
       // Routage vers la bonne home page : 
-      router.push(`/${authSuccess.data.categorie || ""}`)
-      // Vidage du formulaire suite à la validation de celui-ci :
-      completedHTMLInputsElements.current?.reset()
+      router.push(`/${authSuccess.data.role || ""}`)
+    } else { // Si l'authentification échoue, logOut de Firebase :
+      await signOut (auth)
     }
   }
 
@@ -66,25 +65,21 @@ export default function AuthModal() {
             <form
               className="userForm"
               onSubmit={handleAuth}
-              //Transmission de completedHTMLInputsElements depuis le form 
-              ref={completedHTMLInputsElements}
-              >
+            >
               {modalState !== MODAL_STATES.PASSWORD &&
-              <HTMLInputsElements
+              <Fieldset
                 legend="Votre rôle"
                 infos = {USERS_ROLES_RADIO_BUTTONS}
-                containerStyle="usersRolesRadioButtonsContainer"
-                fieldStyle="radioButtonField"
-                labelStyle="radioButtonLabel"
-                placeholders= {[]}
+                fieldsetStyle="radioButtonsFieldset"
+                labelStyle="radioButtonFieldLabel"
               />
               }
-              <HTMLInputsElements
+              <Fieldset
                 legend="Informations personnelles"
                 infos={modalState === MODAL_STATES.SIGN_IN ? SIGN_IN_INPUTS : modalState === MODAL_STATES.SIGN_UP ? SIGN_UP_INPUTS : UPDATE_PASSWORD_INPUTS}
-                containerStyle="inputsContainer"
-                fieldStyle="inputField"
-                placeholders= {[]}
+                fieldsetStyle="textFieldset"
+                labelStyle="textFieldLabel"
+                inputStyle="textFieldInput"
               />
               {modalState === MODAL_STATES.SIGN_IN &&
               <button className = "fakeButton" onClick={() => toggleModals(MODAL_STATES.PASSWORD)} >Mot de passe oublié ?</button>

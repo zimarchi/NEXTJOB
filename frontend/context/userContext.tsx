@@ -10,17 +10,12 @@ type UserContextType = {
     modalState: string,
     toggleModals: (modal: string)=> void,
     firebaseUser: User | null,
-    completedInfosFromForm: Record <string, string>,
-    currentUser: Record <string, string | undefined>,
+    currentUser: Record <string, string | undefined> | null,
     loading : boolean,
-    updateCurrentUser: (currentUser: Record <string, string>)=> void,
+    updateCurrentUser: (currentUser: Record <string, string> | null) => void,
     formattedBirthDateLong: string,
     formattedBirthDateShort: string,
 }
-
-interface CurrentUser {
-    [key: string]: string | undefined;
-  }
 
 export const UserContext =  createContext <UserContextType | null> (null)
 
@@ -34,11 +29,8 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
 
     const [firebaseUser, setFirebaseUser] = useState <User | null> (null)
 
-    const [completedInfosFromForm] = useState ({})
-
-    const [currentUser, setCurrentUser] = useState <CurrentUser> ({})
-
-    const updateCurrentUser = (object: Record<string, string>) => {
+    const [currentUser, setCurrentUser] = useState<Record<string, string> | null> (null)
+    const updateCurrentUser = (object: Record<string, string> | null) => {
         setCurrentUser (object)
     }
 
@@ -52,8 +44,8 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
                 const user = await checkUser(firebaseUser);
                 if (user) updateCurrentUser (user)
             } 
-            if (!firebaseUser) updateCurrentUser({})
-            if (currentUser.birth_date) {
+            if (!firebaseUser) updateCurrentUser(null)
+            if (currentUser?.birth_date) {
                 const longDate = formatDateLong(currentUser.birth_date)
                 setFormattedDateLong(longDate)
                 const shortDate = formatDateShort(currentUser.birth_date)
@@ -62,10 +54,10 @@ export function UserContextProvider ({children} : {children: React.ReactNode}) {
             setLoading (false)
         })
         return unsubscribe
-    }, [loading, currentUser.birth_date])
+    }, [loading, currentUser?.birth_date, currentUser?.role])
 
     return (
-        <UserContext.Provider value = {{ modalState, toggleModals, loading, firebaseUser, completedInfosFromForm, currentUser, updateCurrentUser, formattedBirthDateLong, formattedBirthDateShort }} >
+        <UserContext.Provider value = {{ modalState, toggleModals, loading, firebaseUser, currentUser, updateCurrentUser, formattedBirthDateLong, formattedBirthDateShort }} >
             {children}
         </UserContext.Provider>
     )

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Image from "next/image";
 import UserRoleLabel from "@/components/usersRolesLabels/userRoleLabel";
-import MonCompteForm from "@/components/formsInputs/monCompteForm/monCompteForm";
+import MonCompteForm from "@/components/forms/monCompteForm/monCompteForm";
 import {MODAL_STATES} from "@/constants/modalStates";
 
 export default function MonCompte() {

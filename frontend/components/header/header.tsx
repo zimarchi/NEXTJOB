@@ -32,7 +32,7 @@ export default function Header() {
         <button 
           className={styles.monCompteButton}
           onClick={()=> {
-            if (!firebaseUser) { 
+            if (!firebaseUser || !currentUser) { 
               toggleModals(MODAL_STATES.SIGN_IN)
               return
             }

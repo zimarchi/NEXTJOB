@@ -5,22 +5,40 @@
   --footer-color: #f4f9f4;
   --recruteur-color: #93c796;
   --candidat-color: #417e31;
-  --grey-color: #c4c4c4;
+  --resetButton-background-color: #c4c4c4;
+  --resetButton-color: #000000;
   --box-shadow-light: 0px 0px 5px 1px #cdcdcd;
   --box-shadow-dark: 0px 0px 5px 1px #7d7d7d;
   --modalPage-background-color: #7b7b7b80;
   --fakeButton-color: #0050d1;
-  --submitButton-color: #87b600;
+  --fakeBUtton-background-color: #ffffff;
+  --submitButton-color: #ffffff;
+  --submitButton-background-color: #87b600;
+  --main-background-color: #ffffff;
+  --fieldset-legend-color: #ffffff;
+  --text-color: #000000;
 }
 
 /* Variables pour le dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #2e2626;
-    --foreground: #ededed;
-  }
-  a {
-    color: red;
+    --header-color: #1f1f1f;
+    --header-color-hover: #2a2a2a;
+    --footer-color: #1f1f1f;
+    --recruteur-color: #3a6b3e;
+    --candidat-color: #2d5e25;
+    --resetButton-background-color: #444444;
+    --resetButton-color: #ffffff;
+    --box-shadow-light: 0px 0px 5px 1px #333333;
+    --box-shadow-dark: 0px 0px 5px 1px #000000;
+    --modalPage-background-color: rgba(0, 0, 0, 0.6);
+    --fakeButton-color: #5ca9ff;
+    --fakeBUtton-background-color: #2c2c2c;
+    --submitButton-color: #a1d44b;
+    --submitButton-background-color: #2c2c2c;
+    --main-background-color: #121212;
+    --fieldset-legend-color: #dddddd;
+    --text-color: #ffffff;
   }
 }
 
@@ -42,13 +60,14 @@ header {
 
 body {
   margin: 0 0 0 0;
+  color: var(--text-color);
 }
 
 main {
   display: flex ;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: var(--main-background-color);
   gap: 100px;
 }
 
@@ -63,7 +82,7 @@ input {
 }
 
 label {
-  min-width: 130px;
+  padding-right: 10px;
 }
 
 a {
@@ -76,7 +95,7 @@ a:hover {
 
 .fakeButton {
   font-size: 13px;
-  background-color: white;
+  background-color: var(--fakeBUtton-background-color);
   border: none;
   color: var(--fakeButton-color);
   cursor: pointer;
@@ -88,16 +107,16 @@ a:hover {
 }
 
 .submitButton {
-  background-color: var(--submitButton-color);
-  color: white;
+  background-color: var(--submitButton-background-color);
+  color: var(--submitButton-color);
   font-weight: 800;
   border: none;
   padding: 10 10 10 10; 
 }
 
 .resetButton {
-  background-color: var(--grey-color);
-  color: rgb(0, 0, 0);
+  background-color: var(--resetButton-background-color);
+  color: var(--resetButton-color);
   border: none;
   padding: 10 10 10 10; 
 }
@@ -157,55 +176,51 @@ a:hover {
 .userForm {
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 12 0 20 0;
   gap: 20px;
-  width: 330px; /* Pour empecher que le texte d'erreur qui s'affiche lors de la validation du formulaire ne modifie la largeur de la modale */
+  width: fit-content; /* Pour empecher que le texte d'erreur qui s'affiche lors de la validation du formulaire ne modifie la largeur de la modale */
+  height: fit-content;
 }
 
-.usersRolesRadioButtonsContainer {
-  gap: 70px;
+.radioButtonsFieldset {
+  gap: 50px;
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
   border: none;
-  color: white;
-  font-size: 1px;
+  font-size: 0px;
+  width: fit-content
 }
 
-.profilePhoto {
-  border-radius: 50%;
-  border: #adadad solid .1px;
-}
-
-.inputsContainer {
+.textFieldset {
   display: flex;
   flex-direction: column;
   gap: 8px;
   border: none;
-  color: white;
   font-size: 0px;
+  width: fit-content;
 }
 
-.radioButtonLabel {
-  min-width: 80px;
-}
-
-.radioButtonField,
-.inputField {
+.field {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: black
+  width: fit-content;
 }
 
-.radioButtonField {
+.radioButtonFieldLabel {
   font-size: 17px;
   text-transform: capitalize;
 }
 
-.inputField {
-  font-size: 14.5px;
-  gap: 50px;
+.textFieldLabel {
+  font-size: 14px;
+  width: 120px;
+}
+
+.textFieldInput {
+  width: 200px
 }
 
 .connecterCreerCompte {
@@ -214,6 +229,11 @@ a:hover {
   gap: 10px;
   align-items: center;
   font-size: 13px;
+}
+
+.profilePhoto {
+  border-radius: 50%;
+  border: #adadad solid .1px;
 }
 
 @media (max-width: 700px) {
