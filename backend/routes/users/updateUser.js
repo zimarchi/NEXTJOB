@@ -1,15 +1,19 @@
 var express = require('express');
 var router = express.Router();
 const { dbConnect } = require("../../lib/db")
-const { getAuthenticatedUser } = require("../../lib/auth")
+const { getAuthenticatedUser } = require("../../lib/authenticate")
 
 /* Update user */
 router.post("/", async (req, res) => {
   const sql = await dbConnect()
   const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
-  const { firstname, lastname, birthdate } = req.body
-  
-  console.log("infos envoyée depuis le front", req.body)
+
+  const { firstname, lastname, birth_date, user_photo_url } = req.body;
+  const fieldsToUpdate = {};
+  if (firstname !== undefined) fieldsToUpdate.firstname = firstname;
+  if (lastname !== undefined) fieldsToUpdate.lastname = lastname;
+  if (birth_date !== undefined) fieldsToUpdate.birth_date = birth_date;
+  if (user_photo_url !== undefined) fieldsToUpdate.user_photo_url = user_photo_url;
 
   if (!firebaseToken) {
     return res.status(401).json({ error: "No token provided." });
@@ -22,9 +26,9 @@ router.post("/", async (req, res) => {
       return res.status(404).json({ error: "Aucun utilisateur Supabase correspondant." });
     }
     // Mise à jour du user
-    await sql`UPDATE users SET firstname = ${firstname}, lastname = ${lastname}, birth_date = ${birthdate}, last_login = NOW() WHERE firebase_uid = ${firebaseUId}`;
+    await sql`UPDATE users2 SET ${sql(fieldsToUpdate)} WHERE firebase_uid = ${firebaseUId}`;
     // Renvoi du user mis à jour
-    const updatedUser = await sql`SELECT * FROM users WHERE firebase_uid = ${firebaseUId}`
+    const updatedUser = await sql`SELECT * FROM users2 WHERE firebase_uid = ${firebaseUId}`
     return res.status(200).json({ message: "Token valid", user: updatedUser[0] });
   
   } catch (error) {

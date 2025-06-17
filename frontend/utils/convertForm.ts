@@ -4,4 +4,3 @@ export function convertFormToObject (form: HTMLFormElement) {
     const formObject = Object.fromEntries(formData.entries()) as Record <string, string>
     return formObject
 }
-

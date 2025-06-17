@@ -4,9 +4,8 @@ import styles from "./header.module.css";
 import Image from "next/image";
 import Logo from "../logo/logo";
 import { useAuth } from "../../context/userContext";
-import AuthModal from "@/components/modales/authModal/authModal";
-import MonCompteModal from "../modales/monCompteModal/monCompteModal";
-import UserUpdateModale from "../modales/userUpdateModal/userUpdateModal";
+import AuthModal from "@/components/modals/authModal/authModal";
+import MonCompteModal from "../modals/monCompteModal/monCompteModal";
 import {MODAL_STATES} from "@/constants/modalStates"
 
 import Link from "next/link";
@@ -20,7 +19,6 @@ export default function Header() {
     <header>
       { modalState === MODAL_STATES.MON_COMPTE && <MonCompteModal /> }
       { [MODAL_STATES.SIGN_UP, MODAL_STATES.SIGN_IN, MODAL_STATES.PASSWORD].includes (modalState) && <AuthModal /> }
-      { [MODAL_STATES.UPDATE.USER_BIRTH_DATE, MODAL_STATES.UPDATE.USER_FULL_NAME, MODAL_STATES.UPDATE.USER_PHOTO].includes (modalState) && < UserUpdateModale /> }
       <nav className={styles.nav} aria-label = "Navigation principale">
         <Link 
           onClick={()=> toggleModals(MODAL_STATES.CLOSE)}
@@ -41,7 +39,7 @@ export default function Header() {
         >
           <span> {(firebaseUser && currentUser?.firstname) || "Se connecter"} </span>
           <Image
-            src={currentUser?.photo_url || "/defaultAvatar.svg"}
+            src={currentUser?.user_photo_url || "/defaultAvatar.svg"}
             alt={firebaseUser ? "Photo de profil" : "Icône utilisateur par défaut"}
             width={35}
             height={35}

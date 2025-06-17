@@ -2,11 +2,12 @@ import { getAuth, User } from "firebase/auth";
 import { MODAL_STATES } from "@/constants/modalStates";
 import { convertFormToObject } from "@/utils/convertForm";
 
+
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
 const auth = getAuth();
 const firebaseUser: User | null = auth.currentUser;
 
-export async function updateUser (
+export async function updateUserInfos (
     form: HTMLFormElement, 
     originalFirstname: string | undefined,
     originalLastname: string | undefined,
@@ -14,14 +15,16 @@ export async function updateUser (
     setMessage: React.Dispatch<React.SetStateAction<string>>, 
     modalState: string,
 ) {
-
-    //Conversion du formulaire HTML en objet JSON
+    // Conversion du formulaire HTML en objet JSON
     const formObject = convertFormToObject (form)
-    //console.log(formObject)
-    if (!formObject || !firebaseUser) return false
+    
+    // Vérification que le formulair est rempli et que l'utilisateur est connecté
+    if (!formObject || !firebaseUser)  {
+        return false
+    }
 
     try {
-
+        // MAJ nom et prénom
         if (modalState === MODAL_STATES.UPDATE.USER_FULL_NAME) {
             // Vérification de changement par rapport à l'existant
             if (originalFirstname === formObject.firstname && originalLastname === formObject.lastname) {
@@ -29,11 +32,11 @@ export async function updateUser (
                 return false
             }
         }
-
+        // MAJ date de naissance
         if (modalState === MODAL_STATES.UPDATE.USER_BIRTH_DATE) {
             // Vérification de changement par rapport à l'existant
             const dbDate = originalBirthdate?.split("T")[0]
-            if (dbDate === formObject.birthdate) {
+            if (dbDate === formObject.birth_date) {
                 setMessage("Aucune modification. Veuillez modifier votre date de naissance ou annuler l'action.")
                 return false
             }
@@ -51,9 +54,15 @@ export async function updateUser (
             body : JSON.stringify ({
                 firstname : formObject.firstname || originalFirstname,
                 lastname : formObject.lastname || originalLastname,
-                birthdate: formObject.birthdate || originalBirthdate,
+                ...(formObject.birth_date
+                    ? { birth_date: formObject.birth_date }
+                    : originalBirthdate
+                        ? { birth_date: originalBirthdate }
+                        : {}
+                )  
             })
-        });
+        })
+
         // Réception de la réponse depuis Supabase :
         const { user } = await response.json();
         return user || false;

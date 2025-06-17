@@ -12,8 +12,8 @@ export default function MonCompteForm({infos}: monCompteFormProps) {
   return (
     <section className={styles.inputsContainer}>
       {infos.map ((info : Record<string, string>, index: number) => (
-      <article key = {index} className={styles.inputLine}>
-          <div className={styles.labelValue}>
+      <article key = {index} className={styles.infoLine}>
+          <div className={styles.field}>
               <span className={styles.label}>{info.label}</span>
               <span className={styles.value}>{info.value}</span>
           </div>

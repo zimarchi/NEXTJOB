@@ -6,7 +6,7 @@
     gap: 20px;
     width: 75%;
     border-radius: 10px;
-    box-shadow: var(--box-shadow-light)
+    box-shadow: var(--box-shadow-light);
 }
 
 .title {
@@ -27,34 +27,36 @@
 
 .form {
     display: flex;
-    justify-content: center;
-    gap: 50px;
+    justify-content: space-between;
+    min-width: 700px;
+    gap: 35px;
 }
 
 .photoContainer {
     display: flex;
     gap: 10px;
     flex-direction: column;
-    width: fit-content;
     align-items: center;
+    margin: 0px;
 }
 
 
 @media (max-width: 400px) {
+    .monCompte {
+        width: 85%;
+        margin: 30 0 30 0;
+        padding: 10 20 30 20;
+    }
+
     .title {
-        font-size: 11px;
+        font-size: 11.5px;
     }
-    .blanck {
-        padding: 0 15 40 15;
-    }
+
     .form {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0px;
-    }
-    .inputLine {
-        gap: 0px;
-        justify-content: space-between;
+        min-width: 100%;
+        gap: 20px;
     }
 }

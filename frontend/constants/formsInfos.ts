@@ -32,12 +32,17 @@ export const UPDATE_USER_FULL_NAME_INPUTS : Record <string,string>[] =
         {   label : "Nom",type : "text", placeholder : "NOM", id: "lastname", name: "lastname" },
     ]
 
-export const UPDATE_USER_BIRTH_DATE_INPUTS : Record <string,string>[] = 
+export const UPDATE_USER_EMAIL_INPUTS : Record <string,string>[] = 
     [
-        {   label : "Date de naissance", type : "date", id: "birthdate", name: "birthdate", min: "1900-01-01" },
+        {   label : "Adresse email", type : "email", placeholder : "nom@example.com", id: "email", name: "email" },
     ]
 
-export const UPDATE_USER_PROFILE_PHOTO_INPUTS : Record <string,string>[] = 
+export const UPDATE_USER_BIRTH_DATE_INPUTS : Record <string,string>[] = 
+    [
+        {   label : "Date de naissance", type : "date", id: "birth_date", name: "birth_date", min: "1900-01-01" },
+    ]
+
+export const UPDATE_USER_PHOTO_INPUTS : Record <string,string>[] = 
     [
         {   type : "file", name : "avatar", accept : "image/*", id: "userPhoto" },
     ]

@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail} from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification} from "firebase/auth";
 import { auth } from "../../lib/firebase/firebase-config";
 import { MODAL_STATES } from "@/constants/modalStates";
 import { convertFormToObject } from "@/utils/convertForm";
@@ -28,7 +28,11 @@ export async function authenticate (
       }
       // Création du user dans Firebase
       const cred = await createUserWithEmailAndPassword (auth, formObject.email, formObject.pwd)
+      // Envoi de l'email de vérification par Firebase
+      await sendEmailVerification(cred.user);
+      // Récupération du token de l'utilisateur Firebase
       const firebaseToken = await cred.user.getIdToken ()
+      
       // Envoi au backend via la route users/auth/signup
       const response = await fetch(`${backendURL}/auth/signup`,
         { 
@@ -60,6 +64,13 @@ export async function authenticate (
     if (modalState === MODAL_STATES.SIGN_IN) {
       // Authentification avec Firebase
       const cred = await signInWithEmailAndPassword (auth, formObject.email, formObject.pwd)
+
+      // Vérification que l'email est bien confirmée :
+      if (!cred.user.emailVerified) {
+        setMessage("Veuillez valider votre adresse e-mail avant de vous connecter.")
+        return false
+      }
+
       if (cred) {
         const firebaseToken = await cred.user.getIdToken ()
         // Envoi au backend via la route users/auth/signin

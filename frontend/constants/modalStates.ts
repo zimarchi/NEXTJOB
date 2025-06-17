@@ -7,6 +7,10 @@ export const MODAL_STATES = {
     UPDATE : {
         USER_FULL_NAME : "updateUserFullName",
         USER_BIRTH_DATE : "updateUserBirthDate",
-        USER_PHOTO : "updateUserPhoto"
+        USER_PHOTO : "updateUserPhoto",
+        USER_EMAIL : "updateUserEmail",
+    },
+    DELETE : {
+        USER_PHOTO : "deleteUserPhoto",
     }
 }

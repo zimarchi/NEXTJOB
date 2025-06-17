@@ -5,9 +5,11 @@ type FieldsetProps = {
   placeholders?: string [],
   labelStyle?: string,
   inputStyle?: string,
+  setFile?: React.Dispatch<React.SetStateAction<File | null>>,
+  setURL?: React.Dispatch<React.SetStateAction<string | null>>
 }
 
-export default function Fieldset ({legend, infos, fieldsetStyle, placeholders=[], labelStyle, inputStyle} : FieldsetProps) { 
+export default function Fieldset ({legend, infos, fieldsetStyle, placeholders=[], labelStyle, inputStyle, setFile, setURL} : FieldsetProps) { 
     
   return (
     <fieldset className={fieldsetStyle}>
@@ -26,7 +28,16 @@ export default function Fieldset ({legend, infos, fieldsetStyle, placeholders=[]
           placeholder = {placeholders.length > 0 ? placeholders[i] : info.placeholder}
           {...(info.value ? { value : info.value } : {} )}
           {...(info.min ? { min : info.min } : {} )}
-
+          // Gestion du téléversement de fichiers 
+          {...(info.type === "file" ? { onChange : (e) => {
+            if (e.target.files && setFile && setURL) {
+              const photoFile = e.target.files[0]
+              const photoURL = URL.createObjectURL(photoFile)
+              setFile(photoFile)
+              setURL (photoURL)
+            }
+          } } : {})}
+          
           required
         />
       </div>

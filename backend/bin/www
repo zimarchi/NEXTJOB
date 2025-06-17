@@ -40,7 +40,7 @@ function onListening(server) {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log("Backend is running on http://localhost:"+ bind)
+  console.log(`Backend is running on ${process.env.BACKEND_URL} `+ bind)
 }
 
 function tryListen () {

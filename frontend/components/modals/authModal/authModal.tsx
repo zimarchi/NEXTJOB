@@ -22,18 +22,31 @@ export default function AuthModal() {
   // Message d'erreur en bas du formulaire :
   const [formValidationMessage, setFormValidationMessage] = useState("")
 
+  // Affichage du message de confirmation d'inscription pour les nvx users qui n'ont pas encore validé leur email :
+  const [emailConfirmed, setEmailConfirmed] = useState(true) 
+
   // Gestion de la validation du formulaire :
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     //// Authentification :
     const authSuccess = await authenticate (e.currentTarget, setFormValidationMessage, modalState)
     if (authSuccess) {
-      toggleModals(MODAL_STATES.CLOSE)
-      //MAJ de currentUser :
-      updateCurrentUser (authSuccess.data)
-      // Routage vers la bonne home page : 
-      router.push(`/${authSuccess.data.role || ""}`)
-    } else { // Si l'authentification échoue, logOut de Firebase :
+      // Si l'utilisateur n'a pas encore confirmé son email :
+      if (modalState === MODAL_STATES.SIGN_UP) {
+        setEmailConfirmed(false)
+        await signOut (auth)
+      }
+      // Si l'utilisateur a confirmé son email :
+      if (modalState === MODAL_STATES.SIGN_IN) {
+        toggleModals(MODAL_STATES.CLOSE)
+        //MAJ de currentUser :
+        updateCurrentUser (authSuccess.data)
+        // Routage vers la bonne home page : 
+        router.push(`/${authSuccess.data.role || ""}`)
+      }
+    }
+    // Si l'authentification échoue, logOut de Firebase :
+    if (!authSuccess) {
       await signOut (auth)
     }
   }
@@ -46,13 +59,14 @@ export default function AuthModal() {
           onClick={() => {
             toggleModals(MODAL_STATES.CLOSE)
             if (!firebaseUser) {
-              updateCurrentUser({})
+              updateCurrentUser(null)
             }
           }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="auth-dialog-title"
         >
+          {emailConfirmed &&
           <div className="modal" onClick={(e) => e.stopPropagation() } >
             {modalState === MODAL_STATES.SIGN_IN && <h2 id="auth-dialog-title">Vous avez déjà un compte ?</h2>}
             {modalState === MODAL_STATES.SIGN_UP && <h2 id="auth-dialog-title">Créez votre compte !</h2>}
@@ -82,7 +96,7 @@ export default function AuthModal() {
                 inputStyle="textFieldInput"
               />
               {modalState === MODAL_STATES.SIGN_IN &&
-              <button className = "fakeButton" onClick={() => toggleModals(MODAL_STATES.PASSWORD)} >Mot de passe oublié ?</button>
+              <button type = "button" className = "fakeButton" onClick={() => toggleModals(MODAL_STATES.PASSWORD)} >Mot de passe oublié ?</button>
               }
               <div className="buttonsLine">
                 <button type="reset" className="resetButton" onClick={() => toggleModals(MODAL_STATES.CLOSE)}>
@@ -91,6 +105,7 @@ export default function AuthModal() {
                 <button type="submit" className="submitButton">
                   {modalState === MODAL_STATES.SIGN_IN ? "Se connecter" : modalState === MODAL_STATES.SIGN_UP ? "S'inscrire" : "Envoyer e-mail"}
                 </button>
+                
               </div>
               { formValidationMessage.length > 0 &&
               <span style={{ color: "red", fontSize: 14, width: "100%", display: "block", height: "15px" }}>
@@ -117,6 +132,18 @@ export default function AuthModal() {
             </div>
             }
           </div>
+          }
+          {!emailConfirmed &&
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h4>🎉 Votre compte a été créé !</h4>
+            <p style={{ color: "var(--submitButton-background-color)", fontSize: 16, maxWidth: "400px" }}>
+              Un e-mail de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception avant de vous connecter.
+            </p> 
+            <button type="reset" className="resetButton" onClick={() => toggleModals(MODAL_STATES.CLOSE)}>
+              Fermer
+            </button>     
+          </div>
+          }
         </section>
       }
     </>

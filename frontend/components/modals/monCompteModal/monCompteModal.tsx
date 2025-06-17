@@ -28,6 +28,8 @@ export default function MonCompteModale() {
         }
     }
 
+    if (!currentUser) return null
+
     return (
         <>
             { modalState === MODAL_STATES.MON_COMPTE && 
@@ -55,7 +57,7 @@ export default function MonCompteModale() {
                     <UserRoleLabel label = {currentUser.role} fontSize = "16px" />
                     <section className={styles.userInfosContainer}>
                         <Image
-                            src={currentUser.photo_url || "/defaultAvatar.svg"}
+                            src={currentUser.user_photo_url || "/defaultAvatar.svg"}
                             alt={firebaseUser ? "Photo de profil" : "Icône utilisateur par défaut"}
                             width={80}
                             height={80}
