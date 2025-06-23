@@ -8,10 +8,11 @@ router.post("/", async (req, res) => {
   const sql = await dbConnect()
   const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
 
-  const { firstname, lastname, birth_date, user_photo_url } = req.body;
+  const { firstname, lastname, email, birth_date, user_photo_url } = req.body;
   const fieldsToUpdate = {};
   if (firstname !== undefined) fieldsToUpdate.firstname = firstname;
   if (lastname !== undefined) fieldsToUpdate.lastname = lastname;
+  if (email !== undefined) fieldsToUpdate.email = email;
   if (birth_date !== undefined) fieldsToUpdate.birth_date = birth_date;
   if (user_photo_url !== undefined) fieldsToUpdate.user_photo_url = user_photo_url;
 

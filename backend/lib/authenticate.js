@@ -15,7 +15,7 @@ async function getAuthenticatedUser(sql, firebaseToken, role = null) {
   
     const supabaseUser = await query;
   
-    return { decodedFirebaseToken, firebaseUId, supabaseUser };
+    return { firebaseUId, supabaseUser };
 
 }
 

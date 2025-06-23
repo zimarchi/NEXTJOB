@@ -1,4 +1,4 @@
-import { getAuth, User } from "firebase/auth";
+import { getAuth, User, updateEmail } from "firebase/auth";
 import { MODAL_STATES } from "@/constants/modalStates";
 import { convertFormToObject } from "@/utils/convertForm";
 
@@ -11,6 +11,7 @@ export async function updateUserInfos (
     form: HTMLFormElement, 
     originalFirstname: string | undefined,
     originalLastname: string | undefined,
+    originalEmail: string | undefined,
     originalBirthdate: string | undefined,
     setMessage: React.Dispatch<React.SetStateAction<string>>, 
     modalState: string,
@@ -32,6 +33,14 @@ export async function updateUserInfos (
                 return false
             }
         }
+        // MAJ adresse email
+        if (modalState === MODAL_STATES.UPDATE.USER_EMAIL) {
+            // Vérification de changement par rapport à l'existant
+            if (originalEmail === formObject.email) {
+                setMessage("Aucune modification. Veuillez modifier votre email ou annuler l'action.")
+                return false
+            }
+        }
         // MAJ date de naissance
         if (modalState === MODAL_STATES.UPDATE.USER_BIRTH_DATE) {
             // Vérification de changement par rapport à l'existant
@@ -41,7 +50,6 @@ export async function updateUserInfos (
                 return false
             }
         }
-
         // Récupère et rafraichis le token Firebase actuel :
         const firebaseToken = await firebaseUser.getIdToken(true);
         // Envoi au backend du token pour vérification par Firebase puis mise à jour sur Supabase :
@@ -54,6 +62,7 @@ export async function updateUserInfos (
             body : JSON.stringify ({
                 firstname : formObject.firstname || originalFirstname,
                 lastname : formObject.lastname || originalLastname,
+                email : formObject.email || originalEmail,
                 ...(formObject.birth_date
                     ? { birth_date: formObject.birth_date }
                     : originalBirthdate
