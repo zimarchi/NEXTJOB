@@ -7,33 +7,33 @@ const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export async function authenticate (
   form: HTMLFormElement,
-  setMessage: React.Dispatch<React.SetStateAction<string>>,
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
   modalState: string 
 ) {
   
-  //Conversion du formulaire HTML en objet JSON
+  //Conversion du formulaire HTML en objet JSON :
   const formObject = convertFormToObject (form)
   if (!formObject) return false
   
   try {
     // SignUp :
     if (modalState === MODAL_STATES.SIGN_UP) {
-      // Vérification de saisie identique des deux mots de passe
+      // Vérification de saisie identique des deux mots de passe :
       if (formObject.pwd !== formObject.rptpwd) { 
-        setMessage ("Les deux mots de passe saisis sont différents") 
+        setErrorMessage ("Les deux mots de passe saisis sont différents") 
         return false
       }
       else { 
-        setMessage ("");
+        setErrorMessage ("");
       }
-      // Création du user dans Firebase
+      // Création du user dans Firebase :
       const cred = await createUserWithEmailAndPassword (auth, formObject.email, formObject.pwd)
-      // Envoi de l'email de vérification par Firebase
+      // Envoi de l'email de vérification de l'adresse email par Firebase :
       await sendEmailVerification(cred.user);
-      // Récupération du token de l'utilisateur Firebase
-      const firebaseToken = await cred.user.getIdToken ()
+      // Récupération du token de l'utilisateur Firebase :
+      const firebaseToken = await cred.user.getIdToken()
       
-      // Envoi au backend via la route users/auth/signup
+      // Envoi au backend via la route users/auth/signup :
       const response = await fetch(`${backendURL}/auth/signup`,
         { 
           method: "POST",
@@ -52,7 +52,7 @@ export async function authenticate (
       // Réception de la réponse depuis le backend :
       const data = await response.json();
       if (data.error) {
-        setMessage (data.error)
+        setErrorMessage (data.error)
         console.error("Erreur lors de la création du nouvel utilisateur :", data.error)
         return false
       }
@@ -62,18 +62,18 @@ export async function authenticate (
 
     // SignIn :
     if (modalState === MODAL_STATES.SIGN_IN) {
-      // Authentification avec Firebase
+      // Authentification avec Firebase :
       const cred = await signInWithEmailAndPassword (auth, formObject.email, formObject.pwd)
 
       // Vérification que l'email est bien confirmée :
       if (!cred.user.emailVerified) {
-        setMessage("Veuillez valider votre adresse e-mail avant de vous connecter.")
+        setErrorMessage("Veuillez valider votre adresse e-mail avant de vous connecter.")
         return false
       }
 
       if (cred) {
         const firebaseToken = await cred.user.getIdToken ()
-        // Envoi au backend via la route users/auth/signin
+        // Envoi au backend via la route users/auth/signin :
         const response = await fetch(`${backendURL}/auth/signin`,
           { 
             method: "POST",
@@ -89,7 +89,7 @@ export async function authenticate (
         // Réception de la réponse depuis Supabase :
         const data = await response.json();
         if (data.error) {
-          setMessage (data.error)
+          setErrorMessage (data.error)
           console.error("Erreur depuis le backend : ", data.error)
           return false
         }
@@ -103,13 +103,14 @@ export async function authenticate (
       return ({response : true, data: {}})
     }
 
-  }
-  catch (err) {
+  } catch (err) {
     const error = err as {code?: string}
-    if (error.code === "auth/invalid-email") { setMessage("Format de l'adresse email invalide") } 
-    if (error.code === "auth/email-already-in-use") { setMessage("Cette adresse email est déjà utilisée") } 
-    if (error.code === "auth/weak-password") { setMessage("Le mot de passe saisi doit contenir au moins 6 caractères") } 
-    if (error.code === "auth/invalid-credential") {setMessage("Adresse email ou mot de passe incorrects")}
+    console.error("erreur auth ici : ", error)
+    if (error.code === "auth/invalid-email") { setErrorMessage("Format de l'adresse e-mail invalide.") } 
+    if (error.code === "auth/email-already-in-use") { setErrorMessage("Une erreur est survenue. Veuillez choisir une autre adresse e-mail.") } 
+    if (error.code === "auth/weak-password") { setErrorMessage("Le mot de passe saisi doit contenir au moins 6 caractères.") } 
+    if (error.code === "auth/invalid-credential") {setErrorMessage("Adresse e-mail ou mot de passe incorrects.")}
+    if (error.code === "auth/user-not-found") {setErrorMessage("Veuillez saisir un email et un mot de passe valides.")}
     else { 
       console.error(err)
     }

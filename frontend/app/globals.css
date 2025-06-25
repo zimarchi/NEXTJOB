@@ -14,11 +14,12 @@
   --fakeBUtton-background-color: #ffffff;
   --submitButton-color: #ffffff;
   --submitButton-background-color: #87b600;
+  --disabledButton-background-color: #dedede;
   --main-background-color: #ffffff;
   --fieldset-legend-color: #ffffff;
   --text-color: #000000;
   --label-color: #6c6c6c;
-  --border-fieldLine: 
+  --danger-color: red;
 }
 
 /* Variables pour le dark mode */
@@ -108,8 +109,38 @@ a:hover {
   text-decoration: underline;
 }
 
-.submitButton {
+.dangerButtonBackgroundColor {
+  background-color: var(--danger-color);
+}
+
+.dangerColor {
+  color : var(--danger-color)
+}
+
+.errorMessages {
+  font-size: 14;
+  width: 300px;
+  display: block;
+  height: 15px;
+  color: var(--danger-color);
+}
+
+.modalText {
+  font-size: 15px;
+  max-width: 300px;
+}
+
+.submitButtonBackgroundColor {
   background-color: var(--submitButton-background-color);
+}
+
+.disabledButton {
+  background-color: var(--disabledButton-background-color);
+  cursor: default;
+  pointer-events: none;
+}
+
+.submitButton {
   color: var(--submitButton-color);
   font-weight: 800;
   border: none;
@@ -223,6 +254,11 @@ a:hover {
 
 .textFieldInput {
   width: 200px
+}
+
+.textFieldSelect {
+  width: 150px;
+  height: 25px;
 }
 
 .connecterCreerCompte {

@@ -48,7 +48,7 @@ export default function MonCompteModale() {
                                 handleLogOut ()
                                 window.location.href = "/"
                             }}
-                            className="fakeButton"
+                            className="fakeButton dangerColor"
                             style = {{paddingBottom: "5px"}}
                         >
                             Se déconnecter

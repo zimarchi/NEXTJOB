@@ -1,6 +1,6 @@
 const admin = require("./firebase-admin")
 
-async function getAuthenticatedUser(sql, firebaseToken, role = null) {
+async function getAuthenticatedUser(sql, firebaseToken, originalRole = null) {
 
     if (!firebaseToken) {
       throw { code: 401, message: "No token provided." };
@@ -9,13 +9,13 @@ async function getAuthenticatedUser(sql, firebaseToken, role = null) {
     
     const firebaseUId = decodedFirebaseToken.uid;
 
-    const query = role
-      ? sql`SELECT * FROM users2 WHERE firebase_uid = ${firebaseUId} AND role = ${role}`
-      : sql`SELECT * FROM users2 WHERE firebase_uid = ${firebaseUId}`;
+    const query = originalRole
+      ? sql`SELECT * FROM users WHERE firebase_uid = ${firebaseUId} AND role = ${originalRole}`
+      : sql`SELECT * FROM users WHERE firebase_uid = ${firebaseUId}`;
   
     const supabaseUser = await query;
   
-    return { firebaseUId, supabaseUser };
+    return { decodedFirebaseToken, firebaseUId, supabaseUser };
 
 }
 

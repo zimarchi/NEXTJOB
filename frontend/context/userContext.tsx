@@ -5,6 +5,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../lib/firebase/firebase-config";
 import checkUser from "../helpers/checkUser";
 import { formatDateLong, formatDateShort } from "@/utils/formatDate";
+import { MODAL_STATES } from "@/constants/modalStates";
 
 type UserContextType = {
     modalState: string,
@@ -21,7 +22,7 @@ export const UserContext =  createContext <UserContextType | null> (null)
 
 export function UserContextProvider ({children} : {children: React.ReactNode}) {
     
-    const [modalState, setModalState] = useState ("close")
+    const [modalState, setModalState] = useState (MODAL_STATES.CLOSE)
 
     const toggleModals = (modal:string) => setModalState(modal)
 

@@ -18,13 +18,13 @@ router.post("/", async (req, res) => {
       return res.status(404).json({ error: "Aucun utilisateur Supabase correspondant." });
     }
     // Met à jour de la date de dernière connexion
-    await sql`UPDATE users2 SET last_login = NOW() WHERE firebase_uid = ${firebaseUId}`;
+    await sql`UPDATE users SET last_login = NOW() WHERE firebase_uid = ${firebaseUId}`;
     // Renvoi du user mis à jour
-    const updatedUser = await sql`SELECT * FROM users2 WHERE firebase_uid = ${firebaseUId}`
-    return res.status(200).json({ message: "Valid Token", user: updatedUser[0] });
+    const updatedUser = await sql`SELECT * FROM users WHERE firebase_uid = ${firebaseUId}`
+    return res.status(200).json({ message: "Valid Token.", user: updatedUser[0] });
   } catch (error) {
-    console.error("Erreur lors de la vérification du token:", error);
-    res.status(401).json({ error: "Invalid or expired token." });
+    console.error("Erreur lors de la vérification de l'utilisateur : ", error);
+    res.status(401).json({ error: "Erreur lors de la vérification de l'utilisateur." });
   }
 });
 

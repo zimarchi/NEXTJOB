@@ -15,25 +15,26 @@ export default function AuthModal() {
   // Etats via useContext
   const { modalState, toggleModals, updateCurrentUser, firebaseUser} = useAuth ()
 
+  // Etat pour délai soumission :
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   // Modales à masquer
   const updateModals = Object.values(MODAL_STATES.UPDATE);
   const modalsToHide = [MODAL_STATES.MON_COMPTE, MODAL_STATES.CLOSE, ...updateModals]
 
   // Message d'erreur en bas du formulaire :
-  const [formValidationMessage, setFormValidationMessage] = useState("")
-
-  // Affichage du message de confirmation d'inscription pour les nvx users qui n'ont pas encore validé leur email :
-  const [emailConfirmed, setEmailConfirmed] = useState(true) 
+  const [formErrorMessage, setFormErrorMessage] = useState("")
 
   // Gestion de la validation du formulaire :
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsSubmitting(true)
     //// Authentification :
-    const authSuccess = await authenticate (e.currentTarget, setFormValidationMessage, modalState)
+    const authSuccess = await authenticate (e.currentTarget, setFormErrorMessage, modalState)
     if (authSuccess) {
       // Si l'utilisateur n'a pas encore confirmé son email :
       if (modalState === MODAL_STATES.SIGN_UP) {
-        setEmailConfirmed(false)
+        toggleModals (MODAL_STATES.EMAIL_CONFIRMATION.SIGN_UP)
         await signOut (auth)
       }
       // Si l'utilisateur a confirmé son email :
@@ -49,6 +50,7 @@ export default function AuthModal() {
     if (!authSuccess) {
       await signOut (auth)
     }
+    setIsSubmitting(false)
   }
 
   return (
@@ -66,7 +68,7 @@ export default function AuthModal() {
           aria-modal="true"
           aria-labelledby="auth-dialog-title"
         >
-          {emailConfirmed &&
+          {modalState !== MODAL_STATES.EMAIL_CONFIRMATION.SIGN_UP &&
           <div className="modal" onClick={(e) => e.stopPropagation() } >
             {modalState === MODAL_STATES.SIGN_IN && <h2 id="auth-dialog-title">Vous avez déjà un compte ?</h2>}
             {modalState === MODAL_STATES.SIGN_UP && <h2 id="auth-dialog-title">Créez votre compte !</h2>}
@@ -102,14 +104,14 @@ export default function AuthModal() {
                 <button type="reset" className="resetButton" onClick={() => toggleModals(MODAL_STATES.CLOSE)}>
                   Annuler
                 </button>
-                <button type="submit" className="submitButton">
+                <button type="submit" className={`submitButton ${isSubmitting ? "disabledButton" : "submitButtonBackgroundColor"}`} disabled={isSubmitting} >
                   {modalState === MODAL_STATES.SIGN_IN ? "Se connecter" : modalState === MODAL_STATES.SIGN_UP ? "S'inscrire" : "Envoyer e-mail"}
                 </button>
                 
               </div>
-              { formValidationMessage.length > 0 &&
-              <span style={{ color: "red", fontSize: 14, width: "100%", display: "block", height: "15px" }}>
-                {formValidationMessage}
+              { formErrorMessage.length > 0 &&
+              <span className="errorMessages">
+                {formErrorMessage}
               </span>
               }
             </form>
@@ -125,23 +127,12 @@ export default function AuthModal() {
                   if (modalState === MODAL_STATES.SIGN_UP) {
                     toggleModals(MODAL_STATES.SIGN_IN)
                   } 
-                  setFormValidationMessage ("")
+                  setFormErrorMessage ("")
                 }}>
                 {modalState === MODAL_STATES.SIGN_IN ? "Créez-le !" : "Connectez-vous !" }
               </button>
             </div>
             }
-          </div>
-          }
-          {!emailConfirmed &&
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h4>🎉 Votre compte a été créé !</h4>
-            <p style={{ color: "var(--submitButton-background-color)", fontSize: 16, maxWidth: "400px" }}>
-              Un e-mail de confirmation vous a été envoyé. Veuillez vérifier votre boîte de réception avant de vous connecter.
-            </p> 
-            <button type="reset" className="resetButton" onClick={() => toggleModals(MODAL_STATES.CLOSE)}>
-              Fermer
-            </button>     
           </div>
           }
         </section>

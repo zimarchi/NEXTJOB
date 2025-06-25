@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/users/auth');
 var checkUserRouter = require('./routes/users/checkUser');
 var updateUserRouter = require('./routes/users/updateUser');
+var deleteRouter = require ('./routes/users/delete');
 
 var app = express();
 const cors = require("cors"); 
@@ -24,6 +25,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/checkUser', checkUserRouter);
 app.use('/updateUser', updateUserRouter);
+app.use('/delete', deleteRouter);
 
 
 module.exports = app;

@@ -8,13 +8,14 @@ router.post("/", async (req, res) => {
   const sql = await dbConnect()
   const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
 
-  const { firstname, lastname, email, birth_date, user_photo_url } = req.body;
+  const { firstname, lastname, email, birth_date, originalRole, newRole, user_photo_url } = req.body;
   const fieldsToUpdate = {};
-  if (firstname !== undefined) fieldsToUpdate.firstname = firstname;
-  if (lastname !== undefined) fieldsToUpdate.lastname = lastname;
-  if (email !== undefined) fieldsToUpdate.email = email;
-  if (birth_date !== undefined) fieldsToUpdate.birth_date = birth_date;
-  if (user_photo_url !== undefined) fieldsToUpdate.user_photo_url = user_photo_url;
+  if (firstname) fieldsToUpdate.firstname = firstname;
+  if (lastname) fieldsToUpdate.lastname = lastname;
+  if (email) fieldsToUpdate.email = email;
+  if (birth_date) fieldsToUpdate.birth_date = birth_date;
+  if (user_photo_url !== undefined) fieldsToUpdate.user_photo_url = user_photo_url; // Possibilité de supprimer la photo
+  if (newRole) fieldsToUpdate.role = newRole;
 
   if (!firebaseToken) {
     return res.status(401).json({ error: "No token provided." });
@@ -22,19 +23,19 @@ router.post("/", async (req, res) => {
 
   try {
     // Utilisation de la fonction getAuthenticatedUser pour récupérer l'utilisateur
-    const { firebaseUId, supabaseUser } = await getAuthenticatedUser(sql, firebaseToken, role = null);
+    const { firebaseUId, supabaseUser } = await getAuthenticatedUser(sql, firebaseToken, originalRole);
     if (supabaseUser.length === 0) {
       return res.status(404).json({ error: "Aucun utilisateur Supabase correspondant." });
     }
     // Mise à jour du user
-    await sql`UPDATE users2 SET ${sql(fieldsToUpdate)} WHERE firebase_uid = ${firebaseUId}`;
+    await sql`UPDATE users SET ${sql(fieldsToUpdate)} WHERE firebase_uid = ${firebaseUId}`;
     // Renvoi du user mis à jour
-    const updatedUser = await sql`SELECT * FROM users2 WHERE firebase_uid = ${firebaseUId}`
-    return res.status(200).json({ message: "Token valid", user: updatedUser[0] });
+    const updatedUser = await sql`SELECT * FROM users WHERE firebase_uid = ${firebaseUId}`
+    return res.status(200).json({ message: "Utilisateur mis à jour.", user: updatedUser[0] });
   
   } catch (error) {
-    console.error("Erreur lors de la vérification du token:", error);
-    res.status(401).json({ error: "Invalid or expired token." });
+    console.error("Erreur lors de la mise à jour de l'utilisateur : ", error);
+    res.status(401).json({ error: "Erreur lors de la mise à jour de l'utilisateur." });
   }
 
 });
