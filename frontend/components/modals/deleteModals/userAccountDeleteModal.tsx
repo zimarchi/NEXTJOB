@@ -26,12 +26,6 @@ export default function UserAccountDeleteModal() {
     const handleDeleteUserAccount = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsSubmitting(true)
-        // Vérification que la modale de confirmation de suppression est bien passée :
-        if (!deleteIsConfirmed) {
-            setDeleteIsConfirmed(true);
-            setIsSubmitting(false)
-            return;
-        }
         // Vérification de l'état de la connexion :
         if (firebaseUser && currentUser) {
             // Suppression de l'utilisateur :
@@ -72,9 +66,15 @@ export default function UserAccountDeleteModal() {
                 }
                 <div className="buttonsLine">
                     <button className="resetButton" type="reset" onClick={() => toggleModals(MODAL_STATES.CLOSE)}>Annuler</button>
-                    <button className={`submitButton ${isSubmitting ? "disabledButton" : "dangerButtonBackgroundColor"}`} disabled = {isSubmitting} type="submit" onClick = {()=> setDeleteIsConfirmed(true) }>
-                        {deleteIsConfirmed ? "Supprimer mon compte" : "Oui"}
+                    {!deleteIsConfirmed ? 
+                    <button className={`submitButton ${isSubmitting ? "disabledButton" : "dangerButtonBackgroundColor"}`} disabled = {isSubmitting} onClick = {()=> setDeleteIsConfirmed(true) }>
+                        Oui
+                    </button> 
+                    :
+                    <button className={`submitButton ${isSubmitting ? "disabledButton" : "dangerButtonBackgroundColor"}`} disabled = {isSubmitting} type="submit">
+                        Supprimer mon compte
                     </button>
+                    }
                 </div>
                 {formErrorMessage.length > 0 &&
                 <span className="errorMessages">

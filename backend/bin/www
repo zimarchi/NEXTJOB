@@ -51,7 +51,7 @@ function tryListen () {
   var server = http.createServer(app);
 
   // Listen on provided port, on all network interfaces
-  server.listen(port);
+  server.listen(port, '0.0.0.0');
   server.on('error', (error) => {
     if (error.code === 'EADDRINUSE' && portIndex < 1) {
       console.warn(`Port ${port} is in use, trying ${PORTS[portIndex + 1]}...`);
@@ -62,6 +62,7 @@ function tryListen () {
     }
   });
   server.on('listening', () => onListening (server));
+  console.log("Node.js version: ", process.version)
 }
 
 tryListen ()

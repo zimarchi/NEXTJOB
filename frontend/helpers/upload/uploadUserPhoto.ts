@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/supabase";
+import {v4 as uuidv4} from "uuid"
 
 export async function uploadUserPhoto (
   file: File,
@@ -7,7 +8,7 @@ export async function uploadUserPhoto (
 
   // Création de l'url de la nouvelle photo
   const fileExt = file.name.split('.').pop( );
-  const randomId = crypto.randomUUID();
+  const randomId = uuidv4();
   const filePath = `${firebaseUId}/${randomId}.${fileExt}`;
 
   // Téléversement de la photo dans storage Supabase
