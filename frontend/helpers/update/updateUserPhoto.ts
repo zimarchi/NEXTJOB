@@ -14,7 +14,7 @@ export async function updateUserPhoto (
     try {
         // Récupère et rafraichis le token Firebase actuel :
         const firebaseToken = await firebaseUser.getIdToken(true);
-        // Envoi au backend du token pour vérification par Firebase puis mise à jour sur Supabase :
+        // Envoi au backend du token pour vérification par Firebase puis mise à jour dans Supabase :
         const response = await fetch (`${backendURL}/updateUser`, {
             method: "POST",
             headers: {

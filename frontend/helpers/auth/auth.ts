@@ -107,7 +107,7 @@ export async function authenticate (
     const error = err as {code?: string}
     console.error("erreur auth ici : ", error)
     if (error.code === "auth/invalid-email") { setErrorMessage("Format de l'adresse e-mail invalide.") } 
-    if (error.code === "auth/email-already-in-use") { setErrorMessage("Une erreur est survenue. Veuillez choisir une autre adresse e-mail.") } 
+    if (error.code === "auth/email-already-in-use") { setErrorMessage("Une erreur est survenue. Veuillez saisir une autre adresse e-mail.") } 
     if (error.code === "auth/weak-password") { setErrorMessage("Le mot de passe saisi doit contenir au moins 6 caractères.") } 
     if (error.code === "auth/invalid-credential") {setErrorMessage("Adresse e-mail ou mot de passe incorrects.")}
     if (error.code === "auth/user-not-found") {setErrorMessage("Veuillez saisir un email et un mot de passe valides.")}

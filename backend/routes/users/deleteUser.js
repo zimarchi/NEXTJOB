@@ -4,7 +4,7 @@ const { dbConnect } = require("../../lib/db")
 const { getAuthenticatedUser } = require("../../lib/authenticate")
 
 /* Delete user account */
-router.delete("/userAccount", async (req, res) => {
+router.delete("/", async (req, res) => {
 
     const sql = await dbConnect()
     const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
