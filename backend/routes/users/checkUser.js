@@ -5,7 +5,7 @@ const { getAuthenticatedUser } = require("../../lib/authenticate")
 
 
 /* Check current user */
-router.post("/", async (req, res) => {
+router.get("/", async (req, res) => {
   const sql = await dbConnect()
   const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
   if (!firebaseToken) {

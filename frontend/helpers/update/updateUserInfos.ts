@@ -78,7 +78,7 @@ export async function updateUserInfos (
         const firebaseToken = await firebaseUser.getIdToken(true);
         // Envoi au backend du token pour vérification par Firebase puis mise à jour sur Supabase :
         const response = await fetch (`${backendURL}/updateUser`, {
-            method: "POST",
+            method: "PATCH",
             headers: { 
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${firebaseToken}`,

@@ -9,7 +9,7 @@ export default async function checkUser (firebaseUser: User) {
         const firebaseToken = await firebaseUser.getIdToken(true);
         // Envoi au backend du token pour vérification par Firebase puis par Supabase :
         const response = await fetch (`${backendURL}/checkUser`, {
-            method: "POST",
+            method: "GET",
             headers: { 
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${firebaseToken}`,

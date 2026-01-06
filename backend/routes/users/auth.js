@@ -7,7 +7,7 @@ const { getAuthenticatedUser } = require("../../lib/authenticate")
 /* SignIn user */
 router.post("/signin", async (req, res) => {
   const sql = await dbConnect()
-  // Réception du token de Firebase
+  // Réception du token de Firebase depuis le front
   const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
   const role = req.body.role
   if (!firebaseToken) {
@@ -41,7 +41,7 @@ router.post("/signup", async (req, res) => {
   const { firstname, lastname, email, role } = req.body
   // Vérification de l'email non vide
   if (!firstname || !lastname || !email || !role) {
-    return res.json({ error: "Informations manquantes." }, { status: 400 });
+    return res.status(400).json({error: "Informations manquantes."})
   }
   if (!firebaseToken) {
     return res.status(401).json({ error: "No token provided." });

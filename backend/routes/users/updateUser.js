@@ -4,7 +4,7 @@ const { dbConnect } = require("../../lib/db")
 const { getAuthenticatedUser } = require("../../lib/authenticate")
 
 /* Update user */
-router.post("/", async (req, res) => {
+router.patch("/", async (req, res) => {
   const sql = await dbConnect()
   const firebaseToken = req.headers.authorization?.split("Bearer ")[1];
 
